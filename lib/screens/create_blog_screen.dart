@@ -1,14 +1,24 @@
+// ignore_for_file: must_be_immutable
+
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mustaqim/core/button_form.dart';
+import 'package:mustaqim/core/colors.dart';
+import 'package:mustaqim/core/text_field_form.dart';
 
 class CreateBlogScreen extends StatelessWidget {
-  const CreateBlogScreen({super.key});
+  CreateBlogScreen({super.key});
+
+  TextEditingController blogTitleController = TextEditingController();
+  TextEditingController blogDescriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: ColorsApp.whiteColor,
         body: SingleChildScrollView(
           child: Center(
             child: Padding(
@@ -19,7 +29,7 @@ class CreateBlogScreen extends StatelessWidget {
                     children: [
                       const Icon(
                         Icons.arrow_back_ios_new_rounded,
-                        color: Color(0XFF4258E1),
+                        color: ColorsApp.blueColor,
                         size: 25,
                       ),
                       const Spacer(),
@@ -37,8 +47,9 @@ class CreateBlogScreen extends StatelessWidget {
                     height: 250,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black, width: 2),
-                        color: Colors.grey,
+                        border:
+                            Border.all(color: ColorsApp.blackColor, width: 2),
+                        color: ColorsApp.greyColor,
                         borderRadius: BorderRadius.circular(10)),
                     child: Center(
                       child: Column(
@@ -47,7 +58,7 @@ class CreateBlogScreen extends StatelessWidget {
                           const Icon(
                             Icons.camera_alt_rounded,
                             size: 50,
-                            color: Colors.white,
+                            color: ColorsApp.whiteColor,
                           ),
                           const SizedBox(
                             height: 5,
@@ -57,7 +68,7 @@ class CreateBlogScreen extends StatelessWidget {
                             style: GoogleFonts.aBeeZee(
                                 textStyle: const TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
+                                    color: ColorsApp.whiteColor)),
                           ),
                         ],
                       ),
@@ -66,90 +77,22 @@ class CreateBlogScreen extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  TextField(
-                    decoration: InputDecoration(
-                        border: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                          ), // Black border color
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.black,
-                              width: 2), // Black border color when focused
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.black,
-                              width: 2), // Black border color when enabled
-                        ),
-                        labelText: 'Title',
-                        labelStyle: GoogleFonts.aBeeZee(
-                            textStyle: const TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold))),
+                  TextFieldForm(
+                    textEditingController: blogTitleController,
+                    labelT: 'Title',
                   ),
                   const SizedBox(
                     height: 20,
                   ),
-                  TextField(
-                    decoration: InputDecoration(
-                        border: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                          ), // Black border color
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.black,
-                              width: 2), // Black border color when focused
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.black,
-                              width: 2), // Black border color when enabled
-                        ),
-                        labelText: 'Description',
-                        labelStyle: GoogleFonts.aBeeZee(
-                            textStyle: const TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold))),
-                  ),
+                  TextFieldForm(
+                      textEditingController: blogDescriptionController,
+                      labelT: 'Description'),
                   const SizedBox(
                     height: 20,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black
-                                .withOpacity(0.3), // Shadow color with opacity
-                            spreadRadius: 5.0, // Spread radius of the shadow
-                            blurRadius: 10.0, // Blur radius of the shadow
-                            offset: const Offset(0,
-                                4), // Offset of the shadow (horizontal, vertical)
-                          ),
-                        ],
-                        border: Border.all(color: Colors.black, width: 2),
-                        borderRadius: BorderRadius.circular(50),
-                        color: const Color(0XFF4258E1)),
-                    width: MediaQuery.of(context).size.width,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Upload",
-                            style: GoogleFonts.aBeeZee(
-                                textStyle: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 22)),
-                          ),
-                        ],
-                      ),
-                    ),
+                  ButtonForm(
+                    buttonT: 'Upload',
+                    function: test,
                   ),
                 ],
               ),
@@ -158,5 +101,9 @@ class CreateBlogScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void test() {
+    log("it Worked");
   }
 }

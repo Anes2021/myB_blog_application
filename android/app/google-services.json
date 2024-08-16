@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "176637187244",
+    "project_id": "fir-test-01-anes",
+    "storage_bucket": "fir-test-01-anes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176637187244:android:be5f16b7c5c30cef263b09",
+        "android_client_info": {
+          "package_name": "com.anesh.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQx-wB7314VdpMW-SVh-duvnM0bhD5qS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176637187244:android:2cce616295347a80263b09",
+        "android_client_info": {
+          "package_name": "com.example.application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQx-wB7314VdpMW-SVh-duvnM0bhD5qS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176637187244:android:311a4dc736abb3d9263b09",
+        "android_client_info": {
+          "package_name": "com.example.mustaqim"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQx-wB7314VdpMW-SVh-duvnM0bhD5qS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

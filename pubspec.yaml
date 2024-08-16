@@ -7,11 +7,10 @@ environment:
   sdk: '>=3.4.4 <4.0.0'
 
 dependencies:
+  firebase_core: 
   flutter:
     sdk: flutter
   google_fonts: 
-  sliver_app_bar_builder: ^1.1.0
-  sliver_snap: ^1.2.0
 
 dev_dependencies:
   flutter_test:

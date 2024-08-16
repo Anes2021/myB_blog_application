@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mustaqim/core/colors.dart';
+import 'package:mustaqim/core/styles_text.dart';
 
 class ButtonForm extends StatefulWidget {
   final Function()? function;
@@ -39,11 +39,7 @@ class _ButtonFormState extends State<ButtonForm> {
             children: [
               Text(
                 widget.buttonT,
-                style: GoogleFonts.aBeeZee(
-                    textStyle: const TextStyle(
-                        color: ColorsApp.whiteColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22)),
+                style: TextStyleForms.buttonStyle,
               ),
             ],
           ),

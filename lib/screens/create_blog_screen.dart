@@ -7,16 +7,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mustaqim/core/button_form.dart';
 import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/core/text_field_form.dart';
+import 'package:mustaqim/services/crud.dart';
 
 class CreateBlogScreen extends StatelessWidget {
   CreateBlogScreen({super.key});
 
+  CrudMethods crudMethods = CrudMethods();
   TextEditingController blogTitleController = TextEditingController();
   TextEditingController blogDescriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // Define your custom text theme here
+
       home: Scaffold(
         backgroundColor: ColorsApp.whiteColor,
         body: SingleChildScrollView(

@@ -7,10 +7,13 @@ environment:
   sdk: '>=3.4.4 <4.0.0'
 
 dependencies:
+  cloud_firestore:
   firebase_core: 
+  firebase_storage: 
   flutter:
     sdk: flutter
   google_fonts: 
+  image_picker: 
 
 dev_dependencies:
   flutter_test:

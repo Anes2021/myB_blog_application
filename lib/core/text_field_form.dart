@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mustaqim/core/colors.dart';
+import 'package:mustaqim/core/styles_text.dart';
 
 class TextFieldForm extends StatefulWidget {
   final String? labelT;
@@ -17,26 +17,26 @@ class _TextFieldFormState extends State<TextFieldForm> {
   Widget build(BuildContext context) {
     return TextField(
       controller: widget.textEditingController,
+      style: TextStyleForms.textFieldTextStyle,
       decoration: InputDecoration(
-          border: const OutlineInputBorder(
-            borderSide: BorderSide(
+        border: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: ColorsApp.blackColor,
+          ), // Black border color
+        ),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
               color: ColorsApp.blackColor,
-            ), // Black border color
-          ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(
-                color: ColorsApp.blackColor,
-                width: 2), // Black border color when focused
-          ),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(
-                color: ColorsApp.blackColor,
-                width: 2), // Black border color when enabled
-          ),
-          labelText: widget.labelT ?? "Text",
-          labelStyle: GoogleFonts.aBeeZee(
-              textStyle: const TextStyle(
-                  color: ColorsApp.greyColor, fontWeight: FontWeight.bold))),
+              width: 2), // Black border color when focused
+        ),
+        enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+              color: ColorsApp.blackColor,
+              width: 2), // Black border color when enabled
+        ),
+        labelText: widget.labelT ?? "Text",
+        labelStyle: TextStyleForms.textFieldStyle,
+      ),
     );
   }
 }

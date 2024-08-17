@@ -1,15 +1,16 @@
 // ignore_for_file: must_be_immutable
 
-import 'dart:developer';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mustaqim/core/button_form.dart';
 import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/core/text_field_form.dart';
-import 'package:mustaqim/services/crud.dart';
+import 'package:uuid/uuid.dart';
 
 class CreateBlogScreen extends StatefulWidget {
   const CreateBlogScreen({super.key});
@@ -19,7 +20,7 @@ class CreateBlogScreen extends StatefulWidget {
 }
 
 class _CreateBlogScreenState extends State<CreateBlogScreen> {
-  CrudMethods crudMethods = CrudMethods();
+  bool isSubmitWaiting = false;
 
   TextEditingController blogTitleController = TextEditingController();
 
@@ -126,10 +127,14 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  ButtonForm(
-                    buttonT: 'Upload',
-                    function: test,
-                  ),
+                  isSubmitWaiting
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : ButtonForm(
+                          buttonT: 'Upload',
+                          function: _submit,
+                        ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -142,7 +147,90 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
     );
   }
 
-  void test() {
-    log("it Worked");
+  Future<void> _submit() async {
+    setState(() {
+      isSubmitWaiting = true;
+    });
+
+    //! FORM VALIDATION
+    if (blogTitleController.text.trim().isEmpty ||
+        blogDescriptionController.text.trim().isEmpty) {
+      // message
+      setState(() {
+        isSubmitWaiting = false;
+      });
+      return;
+    }
+
+    if (!(image == null)) {
+      // UPLOAD IMAGE TO STORAGE
+      final storage = FirebaseStorage.instance;
+      final id = const Uuid().v4();
+      final refrence = storage.ref().child("blogs_images/$id");
+      await refrence.putFile(image!);
+      String imageUrl = await refrence.getDownloadURL();
+
+      // UPLOAD data to firestore
+      final firestore = FirebaseFirestore.instance;
+      final BlogModel blogModel = BlogModel(
+          id: id,
+          title: blogTitleController.text.trim(),
+          description: blogDescriptionController.text.trim(),
+          imageUrl: imageUrl);
+
+      await firestore.collection("blogs").doc(id).set(blogModel.toJson());
+
+      // urkoqskrmlkgdldsk
+    } else {
+      final id = const Uuid().v4();
+      final firestore = FirebaseFirestore.instance;
+      final BlogModel blogModel = BlogModel(
+          id: id,
+          title: blogTitleController.text.trim(),
+          description: blogDescriptionController.text.trim(),
+          imageUrl: "");
+
+      await firestore.collection("blogs").doc(id).set(blogModel.toJson());
+    }
+
+    // message success
+
+    setState(() {
+      isSubmitWaiting = false;
+    });
+  }
+}
+
+class BlogModel {
+  final String id;
+  final String title;
+  final String description;
+  final String imageUrl;
+
+  BlogModel({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.imageUrl,
+  });
+
+  // Convert a BlogModel instance to a JSON map.
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'imageUrl': imageUrl,
+    };
+  }
+
+  // Create a BlogModel instance from a JSON map.
+  factory BlogModel.fromJson(Map<String, dynamic> json) {
+    return BlogModel(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String,
+      imageUrl: json['imageUrl'] as String,
+    );
   }
 }

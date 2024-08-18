@@ -98,22 +98,43 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemCount: _items.length,
                   itemBuilder: (context, index) {
                     return const BlogCard(
-                      titleText: "Title",
+                      titleText:
+                          "I study pharmacy right now and i fell good to learn something new!",
                       DescriptionText:
-                          "This is description . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .",
+                          "Discover the world of pharmacy, where science meets healthcare. Learn about the crucial role pharmacists play in ensuring safe and effective medication use, from prescription to patient care. Dive into the history, innovations, and the importance of pharmacies in our daily lives",
                     );
                   },
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  onPressed: _addCard,
-                  child: const Text('Add Card'),
-                ),
+              Column(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 3,
+                    color: ColorsApp.blueColor,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 80,
+                    color: ColorsApp.whiteColor,
+                    child: Center(
+                        child: Container(
+                      width: 150,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          border:
+                              Border.all(color: ColorsApp.blackColor, width: 2),
+                          color: ColorsApp.blueColor,
+                          borderRadius: BorderRadius.circular(30)),
+                    )),
+                  ),
+                ],
               ),
             ],
           ),
         ),
       );
 }
+// ElevatedButton(
+//                   onPressed: _addCard,
+//                   child: const Text('Add Card'),

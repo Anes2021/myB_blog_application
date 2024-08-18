@@ -36,12 +36,14 @@ class _BlogCardState extends State<BlogCard> {
           ),
           child: Center(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment
+                  .start, // Aligns column items to the start (left)
               children: [
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
-                    height: 110,
+                    height: 200,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       border:
@@ -57,31 +59,27 @@ class _BlogCardState extends State<BlogCard> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Align(
-                        alignment: Alignment.centerLeft,
+                      Text(
+                        widget.titleText,
+                        style: TextStyleForms.headLineStyle01,
+                        softWrap:
+                            true, // Ensures the text wraps to the next line
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(widget.titleText,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: true,
-                              style: TextStyleForms.headLineStyle01),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(widget.DescriptionText,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: true,
-                              style: TextStyleForms.headLineStyle03),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                        ],
+                      const SizedBox(height: 5),
+                      Text(
+                        widget.DescriptionText,
+                        style: TextStyleForms.headLineStyle03,
+                        softWrap:
+                            true, // Ensures the text wraps to the next line
+                        maxLines: 3, // Limit the description to 2 or 3 lines
+                        overflow: TextOverflow
+                            .ellipsis, // Show "..." at the end if text exceeds 3 lines
                       ),
+                      const SizedBox(height: 10),
                     ],
                   ),
                 ),

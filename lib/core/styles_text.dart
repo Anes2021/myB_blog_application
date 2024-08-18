@@ -15,4 +15,16 @@ class TextStyleForms {
     textStyle: const TextStyle(
         fontSize: 22, color: ColorsApp.whiteColor, fontWeight: FontWeight.bold),
   );
+  static TextStyle headLineStyle01 = GoogleFonts.aBeeZee(
+    textStyle: const TextStyle(
+        fontSize: 22, color: ColorsApp.blackColor, fontWeight: FontWeight.bold),
+  );
+  static TextStyle headLineStyle02 = GoogleFonts.aBeeZee(
+    textStyle: const TextStyle(
+        fontSize: 18, color: ColorsApp.blackColor, fontWeight: FontWeight.bold),
+  );
+  static TextStyle headLineStyle03 = GoogleFonts.aBeeZee(
+    textStyle: const TextStyle(
+        fontSize: 14, color: ColorsApp.blackColor, fontWeight: FontWeight.bold),
+  );
 }

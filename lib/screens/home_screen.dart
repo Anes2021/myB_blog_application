@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mustaqim/core/blog_card.dart';
 import 'package:mustaqim/core/colors.dart';
+import 'package:mustaqim/screens/create_blog_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,18 +12,33 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static final List<String> _items = [];
+  late List<BlogModel> listOfBlogs;
+  bool isPageLoading = true;
+
   @override
   void initState() {
+    initPage();
     super.initState();
-    // Initialize with some data
-    _items.addAll(List.generate(0, (index) => 'Item $index'));
   }
 
-  void _addCard() {
+  void initPage() async {
     setState(() {
-      final newIndex = _items.length;
-      _items.add('Item $newIndex');
+      isPageLoading = true;
+    });
+    final firebase = FirebaseFirestore.instance;
+
+    await firebase.collection("blogs").get().then((collection) {
+      final lsitOfDocs = collection.docs;
+      final listOfJson = lsitOfDocs.map((doc) {
+        return doc.data();
+      });
+
+      listOfBlogs = listOfJson.map((json) {
+        return BlogModel.fromJson(json);
+      }).toList();
+    });
+    setState(() {
+      isPageLoading = false;
     });
   }
 
@@ -92,20 +109,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: ColorsApp.blueColor,
                 ),
               ),
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  itemCount: _items.length,
-                  itemBuilder: (context, index) {
-                    return const BlogCard(
-                      titleText:
-                          "I study pharmacy right now and i fell good to learn something new!",
-                      DescriptionText:
-                          "Discover the world of pharmacy, where science meets healthcare. Learn about the crucial role pharmacists play in ensuring safe and effective medication use, from prescription to patient care. Dive into the history, innovations, and the importance of pharmacies in our daily lives",
-                    );
-                  },
-                ),
-              ),
+              isPageLoading
+                  ? const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        itemCount: listOfBlogs.length,
+                        itemBuilder: (context, index) {
+                          return BlogCard(
+                            titleText: listOfBlogs[index].title,
+                            descriptionText: listOfBlogs[index].title,
+                            imageUrl: listOfBlogs[index].imageUrl,
+                          );
+                        },
+                      ),
+                    ),
               Column(
                 children: [
                   Container(
@@ -135,6 +157,3 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
 }
-// ElevatedButton(
-//                   onPressed: _addCard,
-//                   child: const Text('Add Card'),

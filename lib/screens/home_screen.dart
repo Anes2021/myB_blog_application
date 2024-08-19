@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mustaqim/core/blog_card.dart';
 import 'package:mustaqim/core/colors.dart';
+import 'package:mustaqim/screens/blog_screen.dart';
 import 'package:mustaqim/screens/create_blog_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -121,9 +122,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemCount: listOfBlogs.length,
                         itemBuilder: (context, index) {
                           return BlogCard(
-                            titleText: listOfBlogs[index].title,
-                            descriptionText: listOfBlogs[index].title,
-                            imageUrl: listOfBlogs[index].imageUrl,
+                            titleText: listOfBlogs[index].title, //
+                            descriptionText:
+                                listOfBlogs[index].description.trim(),
+                            imageUrl: listOfBlogs[index].imageUrl.trim(),
+                            onTap: () {
+                              //
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => BlogScreen(
+                                  blogModel: listOfBlogs[index],
+                                ),
+                              ));
+                              //
+                            },
                           );
                         },
                       ),

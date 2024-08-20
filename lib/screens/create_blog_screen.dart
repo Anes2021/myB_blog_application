@@ -1,7 +1,8 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, use_build_context_synchronously
 
 import 'dart:io';
 
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mustaqim/core/button_form.dart';
 import 'package:mustaqim/core/colors.dart';
+import 'package:mustaqim/core/styles_text.dart';
 import 'package:mustaqim/core/text_field_form.dart';
+import 'package:mustaqim/screens/home_screen.dart';
 import 'package:uuid/uuid.dart';
 
 class CreateBlogScreen extends StatefulWidget {
@@ -43,10 +46,24 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
                 children: [
                   Row(
                     children: [
-                      const Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        color: ColorsApp.blueColor,
-                        size: 25,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const HomeScreen(),
+                          ));
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50)),
+                          padding: const EdgeInsets.all(8.0),
+                          child: const Center(
+                            child: Icon(
+                              Icons.arrow_back_ios_new_rounded,
+                              color: ColorsApp.blueColor,
+                              size: 25,
+                            ),
+                          ),
+                        ),
                       ),
                       const Spacer(),
                       SizedBox(
@@ -59,7 +76,7 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
                       const Spacer(),
                     ],
                   ),
-                  InkWell(
+                  GestureDetector(
                     onTap: () async {
                       final imagePicker = ImagePicker();
                       final pickedImage = await imagePicker.pickImage(
@@ -157,6 +174,10 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
         blogDescriptionController.text.trim().isEmpty) {
       // message
       setState(() {
+        CherryToast.info(
+                title: Text("Please add all post informations",
+                    style: TextStyleForms.headLineStyle03))
+            .show(context);
         isSubmitWaiting = false;
       });
       return;
@@ -182,15 +203,14 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
 
       // urkoqskrmlkgdldsk
     } else {
-      final id = const Uuid().v4();
-      final firestore = FirebaseFirestore.instance;
-      final BlogModel blogModel = BlogModel(
-          id: id,
-          title: blogTitleController.text.trim(),
-          description: blogDescriptionController.text.trim(),
-          imageUrl: "");
-
-      await firestore.collection("blogs").doc(id).set(blogModel.toJson());
+      setState(() {
+        isSubmitWaiting = false;
+      });
+      CherryToast.info(
+              title: Text("Please add post image",
+                  style: TextStyleForms.headLineStyle03))
+          .show(context);
+      return;
     }
 
     // message success
@@ -198,6 +218,9 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
     setState(() {
       isSubmitWaiting = false;
     });
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const HomeScreen(),
+    ));
   }
 }
 

@@ -5,7 +5,11 @@ import 'package:mustaqim/core/styles_text.dart';
 class ButtonForm extends StatefulWidget {
   final Function()? function;
   final String buttonT;
-  const ButtonForm({super.key, required this.buttonT, this.function});
+  const ButtonForm({
+    super.key,
+    required this.buttonT,
+    this.function,
+  });
 
   @override
   State<ButtonForm> createState() => _ButtonFormState();
@@ -14,8 +18,11 @@ class ButtonForm extends StatefulWidget {
 class _ButtonFormState extends State<ButtonForm> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: widget.function,
+    return GestureDetector(
+      onTap: widget.function ??
+          () {
+            Navigator.of(context).pushNamed("createBlog");
+          },
       child: Container(
         decoration: BoxDecoration(
             boxShadow: [

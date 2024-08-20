@@ -7,6 +7,7 @@ environment:
   sdk: '>=3.4.4 <4.0.0'
 
 dependencies:
+  cherry_toast: ^1.11.0
   cloud_firestore:
   firebase_core: 
   firebase_storage: 

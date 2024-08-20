@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mustaqim/core/blog_card.dart';
+import 'package:mustaqim/core/button_form.dart';
 import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/screens/blog_screen.dart';
 import 'package:mustaqim/screens/create_blog_screen.dart';
@@ -45,8 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        // Define your custom text theme here
-
+        routes: {
+          'home': (context) => const HomeScreen(),
+          'createBlog': (context) => const CreateBlogScreen(),
+        },
         home: Scaffold(
           backgroundColor: Colors.grey[200],
           body: Column(
@@ -61,13 +64,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: MediaQuery.of(context).size.width,
                     color: ColorsApp.whiteColor,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const SizedBox(
-                          height: 70,
-                          width: 70,
+                        InkWell(
+                          child: Container(
+                            height: 70,
+                            width: 70,
+                            decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)),
+                                color: ColorsApp.whiteColor),
+                            child: const Center(
+                              child: Icon(
+                                Icons.language_rounded,
+                                size: 25,
+                                color: ColorsApp.blueColor,
+                              ),
+                            ),
+                          ),
                         ),
-                        const Spacer(),
                         SizedBox(
                           height: 70,
                           width: 70,
@@ -76,11 +91,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             fit: BoxFit.scaleDown,
                           ),
                         ),
-                        const Spacer(),
                         InkWell(
                           child: Container(
-                            height: 50,
-                            width: 50,
+                            height: 70,
+                            width: 70,
                             decoration: const BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(50)),
@@ -89,14 +103,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Icon(
                                 Icons.exit_to_app_rounded,
                                 size: 25,
-                                color: ColorsApp.blackColor,
+                                color: ColorsApp.blueColor,
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                          width: 10,
                         ),
                       ],
                     ),
@@ -150,16 +160,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: MediaQuery.of(context).size.width,
                     height: 80,
                     color: ColorsApp.whiteColor,
-                    child: Center(
-                        child: Container(
-                      width: 150,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          border:
-                              Border.all(color: ColorsApp.blackColor, width: 2),
-                          color: ColorsApp.blueColor,
-                          borderRadius: BorderRadius.circular(30)),
-                    )),
+                    child: const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: ButtonForm(
+                          buttonT: "Create Blog",
+                          function: null,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),

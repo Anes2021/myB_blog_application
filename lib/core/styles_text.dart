@@ -13,7 +13,7 @@ class TextStyleForms {
   );
   static TextStyle buttonStyle = GoogleFonts.aBeeZee(
     textStyle: const TextStyle(
-        fontSize: 22, color: ColorsApp.whiteColor, fontWeight: FontWeight.bold),
+        fontSize: 20, color: ColorsApp.whiteColor, fontWeight: FontWeight.bold),
   );
   static TextStyle headLineStyle01 = GoogleFonts.aBeeZee(
     textStyle: const TextStyle(
@@ -25,6 +25,10 @@ class TextStyleForms {
   );
   static TextStyle headLineStyle03 = GoogleFonts.aBeeZee(
     textStyle: const TextStyle(
-        fontSize: 14, color: ColorsApp.blackColor, fontWeight: FontWeight.bold),
+        fontSize: 15, color: ColorsApp.greyColor, fontWeight: FontWeight.bold),
+  );
+  static TextStyle headLineStyle04 = GoogleFonts.aBeeZee(
+    textStyle: const TextStyle(
+        fontSize: 24, color: ColorsApp.blackColor, fontWeight: FontWeight.bold),
   );
 }

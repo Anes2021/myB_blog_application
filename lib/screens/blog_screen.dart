@@ -1,12 +1,34 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/core/styles_text.dart';
-import 'package:mustaqim/screens/create_blog_screen.dart';
+import 'package:mustaqim/models/blog_model.dart';
 
-class BlogScreen extends StatelessWidget {
+class BlogScreen extends StatefulWidget {
   final BlogModel blogModel;
 
   const BlogScreen({super.key, required this.blogModel});
+
+  @override
+  State<BlogScreen> createState() => _BlogScreenState();
+}
+
+class _BlogScreenState extends State<BlogScreen> {
+  bool isLiked = false;
+  bool isWaitingLike = false;
+  @override
+  void initState() {
+    initPage();
+    super.initState();
+  }
+
+  initPage() async {
+    final String deviceId = await _getDeviceId();
+    // final String deviceId = auth.currentUser!.uid;
+
+    isLiked = widget.blogModel.listOfLikes.contains(deviceId);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +36,9 @@ class BlogScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: ColorsApp.whiteColor,
         title: Text(
-          blogModel.title.length > 18
-              ? '${blogModel.title.substring(0, 18)}...'
-              : blogModel.title,
+          widget.blogModel.title.length > 18
+              ? '${widget.blogModel.title.substring(0, 18)}...'
+              : widget.blogModel.title,
           style: TextStyleForms.headLineStyle01,
         ),
         centerTitle: true,
@@ -56,7 +78,7 @@ class BlogScreen extends StatelessWidget {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(16),
                                 child: Image.network(
-                                  blogModel.imageUrl,
+                                  widget.blogModel.imageUrl,
                                   fit: BoxFit.cover,
                                   width: MediaQuery.of(context).size.width,
                                 ),
@@ -70,12 +92,12 @@ class BlogScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    blogModel.title,
+                                    widget.blogModel.title,
                                     style: TextStyleForms.headLineStyle04,
                                   ),
                                   const SizedBox(height: 5),
                                   Text(
-                                    blogModel.description,
+                                    widget.blogModel.description,
                                     style: TextStyleForms.headLineStyle03,
                                   ),
                                   const SizedBox(height: 20),
@@ -89,9 +111,10 @@ class BlogScreen extends StatelessWidget {
                                 color: Colors.grey[400],
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: const Center(
+                              child: Center(
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
                                   child: Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -101,10 +124,59 @@ class BlogScreen extends StatelessWidget {
                                       //? LIKE BUTTON
                                       Row(
                                         children: [
-                                          Icon(
-                                            Icons.thumb_up_sharp,
-                                            size: 37,
-                                            color: ColorsApp.greyColor,
+                                          IconButton(
+                                            onPressed: isWaitingLike
+                                                ? null
+                                                : () async {
+                                                    setState(() {
+                                                      isWaitingLike = true;
+                                                    });
+                                                    final String deviceId =
+                                                        await _getDeviceId();
+
+                                                    List listOfLikes = widget
+                                                        .blogModel.listOfLikes;
+
+                                                    if (isLiked) {
+                                                      // unLike
+                                                      listOfLikes
+                                                          .remove(deviceId);
+                                                      await FirebaseFirestore
+                                                          .instance
+                                                          .collection("blogs")
+                                                          .doc(widget
+                                                              .blogModel.id)
+                                                          .update({
+                                                        "listOfLikes":
+                                                            listOfLikes
+                                                      });
+                                                    } else {
+                                                      // like
+
+                                                      listOfLikes.add(deviceId);
+                                                      await FirebaseFirestore
+                                                          .instance
+                                                          .collection("blogs")
+                                                          .doc(widget
+                                                              .blogModel.id)
+                                                          .update({
+                                                        "listOfLikes":
+                                                            listOfLikes
+                                                      });
+                                                    }
+
+                                                    setState(() {
+                                                      isLiked = !isLiked;
+                                                      isWaitingLike = false;
+                                                    });
+                                                  },
+                                            icon: Icon(
+                                              isLiked
+                                                  ? Icons.favorite
+                                                  : Icons.favorite_border,
+                                              size: 37,
+                                              color: ColorsApp.greyColor,
+                                            ),
                                           ),
                                           // Text(
                                           //   " : ",
@@ -122,7 +194,7 @@ class BlogScreen extends StatelessWidget {
                                           // ),
                                         ],
                                       ),
-                                      Row(
+                                      const Row(
                                         children: [
                                           Icon(
                                             Icons.comment_sharp,
@@ -145,7 +217,7 @@ class BlogScreen extends StatelessWidget {
                                           // ),
                                         ],
                                       ),
-                                      Row(
+                                      const Row(
                                         children: [
                                           Icon(
                                             Icons.share_sharp,
@@ -176,4 +248,8 @@ class BlogScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<String> _getDeviceId() async {
+  return "androidInfo.id";
 }

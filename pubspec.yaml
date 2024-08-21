@@ -9,6 +9,7 @@ environment:
 dependencies:
   cherry_toast: ^1.11.0
   cloud_firestore:
+  device_info_plus: ^10.1.2
   firebase_core: 
   firebase_storage: 
   flutter:

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mustaqim/core/blog_card.dart';
 import 'package:mustaqim/core/button_form.dart';
 import 'package:mustaqim/core/colors.dart';
+import 'package:mustaqim/models/blog_model.dart';
 import 'package:mustaqim/screens/blog_screen.dart';
 import 'package:mustaqim/screens/create_blog_screen.dart';
 

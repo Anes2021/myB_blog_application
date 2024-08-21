@@ -12,6 +12,7 @@ import 'package:mustaqim/core/button_form.dart';
 import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/core/styles_text.dart';
 import 'package:mustaqim/core/text_field_form.dart';
+import 'package:mustaqim/models/blog_model.dart';
 import 'package:mustaqim/screens/home_screen.dart';
 import 'package:uuid/uuid.dart';
 
@@ -197,7 +198,8 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
           id: id,
           title: blogTitleController.text.trim(),
           description: blogDescriptionController.text.trim(),
-          imageUrl: imageUrl);
+          imageUrl: imageUrl,
+          listOfLikes: []);
 
       await firestore.collection("blogs").doc(id).set(blogModel.toJson());
 
@@ -221,39 +223,5 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const HomeScreen(),
     ));
-  }
-}
-
-class BlogModel {
-  final String id;
-  final String title;
-  final String description;
-  final String imageUrl;
-
-  BlogModel({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.imageUrl,
-  });
-
-  // Convert a BlogModel instance to a JSON map.
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'imageUrl': imageUrl,
-    };
-  }
-
-  // Create a BlogModel instance from a JSON map.
-  factory BlogModel.fromJson(Map<String, dynamic> json) {
-    return BlogModel(
-      id: json['id'] as String,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      imageUrl: json['imageUrl'] as String,
-    );
   }
 }

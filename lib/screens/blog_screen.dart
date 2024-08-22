@@ -134,12 +134,12 @@ class _BlogScreenState extends State<BlogScreen> {
                                                     final String deviceId =
                                                         await _getDeviceId();
 
-                                                    List listOfLikes = widget
+                                                    List newListOfLikes = widget
                                                         .blogModel.listOfLikes;
 
                                                     if (isLiked) {
                                                       // unLike
-                                                      listOfLikes
+                                                      newListOfLikes
                                                           .remove(deviceId);
                                                       await FirebaseFirestore
                                                           .instance
@@ -148,12 +148,13 @@ class _BlogScreenState extends State<BlogScreen> {
                                                               .blogModel.id)
                                                           .update({
                                                         "listOfLikes":
-                                                            listOfLikes
+                                                            newListOfLikes
                                                       });
                                                     } else {
                                                       // like
 
-                                                      listOfLikes.add(deviceId);
+                                                      newListOfLikes
+                                                          .add(deviceId);
                                                       await FirebaseFirestore
                                                           .instance
                                                           .collection("blogs")
@@ -161,7 +162,7 @@ class _BlogScreenState extends State<BlogScreen> {
                                                               .blogModel.id)
                                                           .update({
                                                         "listOfLikes":
-                                                            listOfLikes
+                                                            newListOfLikes
                                                       });
                                                     }
 

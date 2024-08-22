@@ -9,6 +9,7 @@ import 'package:mustaqim/core/button_form.dart';
 import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/models/blog_model.dart';
 import 'package:mustaqim/screens/auth/login_screen.dart';
+import 'package:mustaqim/screens/auth/registration_screen.dart';
 import 'package:mustaqim/screens/blog_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,6 +22,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late List<BlogModel> listOfBlogs;
   bool isPageLoading = true;
+  final auth = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
+  late UserModel userModel;
 
   @override
   void initState() {
@@ -32,9 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       isPageLoading = true;
     });
-    final firebase = FirebaseFirestore.instance;
 
-    await firebase
+    await firestore
         .collection("blogs")
         .orderBy("createdAt", descending: false)
         .get()
@@ -48,6 +51,16 @@ class _HomeScreenState extends State<HomeScreen> {
         return BlogModel.fromJson(json);
       }).toList();
     });
+
+    //* read user model
+    userModel = await firestore
+        .collection("users")
+        .doc(auth.currentUser!.uid)
+        .get()
+        .then((doc) {
+      return UserModel.fromJson(doc.data()!);
+    });
+
     setState(() {
       isPageLoading = false;
     });
@@ -57,136 +70,147 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            children: [
-              Container(
-                height: 80,
-                width: MediaQuery.of(context).size.width,
-                color: ColorsApp.whiteColor,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: isPageLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
                   children: [
-                    InkWell(
-                      child: Container(
-                        height: 70,
-                        width: 70,
-                        decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(50)),
-                            color: ColorsApp.whiteColor),
-                        child: const Center(
-                          child: Icon(
-                            Icons.language_rounded,
-                            size: 25,
-                            color: ColorsApp.blueColor,
+                    Container(
+                      height: 80,
+                      width: MediaQuery.of(context).size.width,
+                      color: ColorsApp.whiteColor,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            child: Container(
+                              height: 70,
+                              width: 70,
+                              decoration: const BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50)),
+                                  color: ColorsApp.whiteColor),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.language_rounded,
+                                  size: 25,
+                                  color: ColorsApp.blueColor,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 70,
-                      width: 70,
-                      child: Image.asset(
-                        'assets/images/app_icon_scaled.png',
-                        fit: BoxFit.scaleDown,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () async {
-                        await FirebaseAuth.instance.signOut();
-
-                        CherryToast.success(
-                          description: const Text("SIGNED OUT SUCCESSFULLY!"),
-                        ).show(context);
-
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ));
-                      },
-                      child: Container(
-                        height: 70,
-                        width: 70,
-                        decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(50)),
-                            color: ColorsApp.whiteColor),
-                        child: const Center(
-                          child: Icon(
-                            Icons.exit_to_app_rounded,
-                            size: 25,
-                            color: ColorsApp.blueColor,
+                          SizedBox(
+                            height: 70,
+                            width: 70,
+                            child: Image.asset(
+                              'assets/images/app_icon_scaled.png',
+                              fit: BoxFit.scaleDown,
+                            ),
                           ),
-                        ),
+                          InkWell(
+                            onTap: () async {
+                              await FirebaseAuth.instance.signOut();
+
+                              CherryToast.success(
+                                description:
+                                    const Text("SIGNED OUT SUCCESSFULLY!"),
+                              ).show(context);
+
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ));
+                            },
+                            child: Container(
+                              height: 70,
+                              width: 70,
+                              decoration: const BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50)),
+                                  color: ColorsApp.whiteColor),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.exit_to_app_rounded,
+                                  size: 25,
+                                  color: ColorsApp.blueColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          Container(
-            height: 3,
-            width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(
-              color: ColorsApp.blueColor,
-            ),
-          ),
-          isPageLoading
-              ? const Expanded(
-                  child: Center(
-                    child: CircularProgressIndicator(),
+                Container(
+                  height: 3,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: const BoxDecoration(
+                    color: ColorsApp.blueColor,
                   ),
-                )
-              : Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    itemCount: listOfBlogs.length,
-                    itemBuilder: (context, index) {
-                      return BlogCard(
-                        titleText: listOfBlogs[index].title, //
-                        descriptionText: listOfBlogs[index].description.trim(),
-                        imageUrl: listOfBlogs[index].imageUrl.trim(),
-                        onTap: () {
-                          //
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => BlogScreen(
-                              blogModel: listOfBlogs[index],
+                ),
+                isPageLoading
+                    ? const Expanded(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          itemCount: listOfBlogs.length,
+                          itemBuilder: (context, index) {
+                            return BlogCard(
+                              titleText: listOfBlogs[index].title, //
+                              descriptionText:
+                                  listOfBlogs[index].description.trim(),
+                              imageUrl: listOfBlogs[index].imageUrl.trim(),
+                              onTap: () {
+                                //
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => BlogScreen(
+                                    blogModel: listOfBlogs[index],
+                                  ),
+                                ));
+                                //
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                !userModel.isAdmin
+                    ? Container()
+                    : Column(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 3,
+                            color: ColorsApp.blueColor,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 80,
+                            color: ColorsApp.whiteColor,
+                            child: const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: ButtonForm(
+                                  buttonT: "Create Blog",
+                                  function: null,
+                                ),
+                              ),
                             ),
-                          ));
-                          //
-                        },
-                      );
-                    },
-                  ),
-                ),
-          Column(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 3,
-                color: ColorsApp.blueColor,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 80,
-                color: ColorsApp.whiteColor,
-                child: const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: ButtonForm(
-                      buttonT: "Create Blog",
-                      function: null,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+                          ),
+                        ],
+                      ),
+              ],
+            ),
     );
   }
 }

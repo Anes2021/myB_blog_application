@@ -1,15 +1,19 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/core/styles_text.dart';
 import 'package:mustaqim/models/blog_model.dart';
 import 'package:mustaqim/models/comment_model.dart';
 import 'package:mustaqim/screens/auth/registration_screen.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
 
 class BlogScreen extends StatefulWidget {
@@ -286,19 +290,27 @@ class _BlogScreenState extends State<BlogScreen> {
                                                 ),
                                               ],
                                             ),
-                                            const Icon(
-                                              Icons.share_sharp,
-                                              size: 37,
-                                              color: ColorsApp.greyColor,
+                                            IconButton(
+                                              onPressed: () async {
+                                                // fetch widget.blogModel.imageUrl ====)) File()
+
+                                                await shareImageFromFirebase(
+                                                    widget.blogModel.imageUrl);
+                                              },
+                                              icon: Icon(
+                                                Icons.share,
+                                                size: 37,
+                                                color: ColorsApp.greyColor,
+                                              ),
                                             ),
-                                            InkWell(
-                                              onTap: () {
+                                            IconButton(
+                                              onPressed: () {
                                                 setState(() {
                                                   areCommentsVisible =
                                                       !areCommentsVisible;
                                                 });
                                               },
-                                              child: Icon(
+                                              icon: Icon(
                                                 areCommentsVisible
                                                     ? Icons.comment
                                                     : Icons.comment_outlined,
@@ -448,5 +460,24 @@ class CommentCard extends StatelessWidget {
       title: Text(commentModel.username),
       subtitle: Text(commentModel.description),
     );
+  }
+}
+
+Future<void> shareImageFromFirebase(String imageUrl) async {
+  try {
+    // 1. Get a reference to the file from Firebase Storage
+    final ref = FirebaseStorage.instance.refFromURL(imageUrl);
+
+    // 2. Download the file to a temporary directory
+    final Directory tempDir = await getTemporaryDirectory();
+    final String tempPath = '${tempDir.path}/tempImage.png';
+    final File tempFile = File(tempPath);
+
+    await ref.writeToFile(tempFile);
+
+    // 3. Share the image using share_plus package
+    Share.shareXFiles([XFile(tempFile.path)], text: 'Check out this image!');
+  } catch (e) {
+    print('Error sharing image: $e');
   }
 }

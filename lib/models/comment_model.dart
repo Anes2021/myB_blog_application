@@ -1,9 +1,9 @@
 class CommentModel {
   final String id;
   final String userId;
-  final DateTime date;
   final String username;
   final String description;
+  final DateTime date;
 
   CommentModel({
     required this.date,

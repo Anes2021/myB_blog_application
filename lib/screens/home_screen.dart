@@ -1,9 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mustaqim/core/blog_card.dart';
 import 'package:mustaqim/core/button_form.dart';
 import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/models/blog_model.dart';
+import 'package:mustaqim/screens/auth/login_screen.dart';
 import 'package:mustaqim/screens/blog_screen.dart';
 import 'package:mustaqim/screens/create_blog_screen.dart';
 
@@ -93,6 +98,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         InkWell(
+                          onTap: () async {
+                            await FirebaseAuth.instance.signOut();
+
+                            CherryToast.success(
+                              description:
+                                  const Text("SIGNED OUT SUCCESSFULLY!"),
+                            ).show(context);
+
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ));
+                          },
                           child: Container(
                             height: 70,
                             width: 70,

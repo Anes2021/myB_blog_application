@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -77,7 +79,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: isSubmit ? null : _register,
+              onPressed: isSubmit
+                  ? null
+                  : () async {
+                      await _register();
+                    },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(16),
                 shape: RoundedRectangleBorder(
@@ -90,6 +96,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 style: const TextStyle(fontSize: 18),
               ),
             ),
+            const SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: InkWell(
+                  onTap: () {
+                    //
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ));
+                  },
+                  child: const Text(
+                    "LOGIN",
+                    style: TextStyle(
+                        color: Colors.blue, fontWeight: FontWeight.bold),
+                  )),
+            )
           ],
         ),
       ),
@@ -106,10 +129,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (emailController.text.trim().isEmpty ||
         userNameController.text.trim().isEmpty ||
         passwordController.text.trim().isEmpty) {
-      //
       CherryToast.warning(
         description: const Text("PLEASE FILL ALL FIELDS"),
-      );
+      ).show(context);
 
       setState(() {
         isSubmit = false;
@@ -139,15 +161,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       CherryToast.success(
         description: const Text("REGISTRATION COMPLETED"),
-      );
+      ).show(context);
 
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => const LoginScreen(),
       ));
     } on FirebaseAuthException catch (e) {
-      CherryToast.success(
+      CherryToast.error(
         description: Text(e.code.toString()),
-      );
+      ).show(context);
     }
 
     // * end

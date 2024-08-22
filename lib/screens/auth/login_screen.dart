@@ -1,7 +1,26 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: use_build_context_synchronously
 
-class LoginScreen extends StatelessWidget {
+import 'package:cherry_toast/cherry_toast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:mustaqim/screens/auth/registration_screen.dart';
+import 'package:mustaqim/screens/home_screen.dart';
+
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  //* 1: create an instance
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  //* 2: Controllers
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  //* 4: create waiting bools
+  bool isSubmit = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +50,17 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(
                 labelText: 'Email',
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: passwordController,
+              decoration: const InputDecoration(
                 labelText: 'Password',
                 border: OutlineInputBorder(),
               ),
@@ -47,9 +68,11 @@ class LoginScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () {
-                // Handle login action
-              },
+              onPressed: isSubmit
+                  ? null
+                  : () async {
+                      await _login();
+                    },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(16),
                 shape: RoundedRectangleBorder(
@@ -57,14 +80,75 @@ class LoginScreen extends StatelessWidget {
                 ),
                 backgroundColor: Colors.blueAccent,
               ),
-              child: const Text(
-                'Login',
-                style: TextStyle(fontSize: 18),
+              child: Text(
+                isSubmit ? "WAIT .." : 'Login',
+                style: const TextStyle(fontSize: 18),
               ),
             ),
+            const SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: InkWell(
+                  onTap: () {
+                    //
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const SignUpScreen(),
+                    ));
+                  },
+                  child: const Text(
+                    "REGISTER",
+                    style: TextStyle(
+                        color: Colors.blue, fontWeight: FontWeight.bold),
+                  )),
+            )
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _login() async {
+    setState(() {
+      isSubmit = true;
+    });
+    //* start
+    //! validation
+    if (emailController.text.trim().isEmpty ||
+        passwordController.text.trim().isEmpty) {
+      CherryToast.warning(
+        description: const Text("PLEASE FILL ALL FIELDS"),
+      ).show(context);
+
+      setState(() {
+        isSubmit = false;
+      });
+
+      return;
+    }
+
+    //*
+
+    try {
+      await auth.signInWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim());
+
+      CherryToast.success(
+        description: const Text("REGISTRATION COMPLETED"),
+      ).show(context);
+
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => const HomeScreen(),
+      ));
+    } on FirebaseAuthException catch (e) {
+      CherryToast.error(
+        description: Text(e.code.toString()),
+      ).show(context);
+    }
+
+    setState(() {
+      isSubmit = false;
+    });
   }
 }

@@ -199,7 +199,8 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
           title: blogTitleController.text.trim(),
           description: blogDescriptionController.text.trim(),
           imageUrl: imageUrl,
-          listOfLikes: []);
+          listOfLikes: [],
+          createdAt: DateTime.now());
 
       await firestore.collection("blogs").doc(id).set(blogModel.toJson());
 

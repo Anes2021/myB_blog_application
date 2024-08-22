@@ -1,8 +1,16 @@
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
+import 'dart:developer';
+
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/core/styles_text.dart';
 import 'package:mustaqim/models/blog_model.dart';
+import 'package:mustaqim/models/comment_model.dart';
+import 'package:mustaqim/screens/auth/registration_screen.dart';
+import 'package:uuid/uuid.dart';
 
 class BlogScreen extends StatefulWidget {
   final BlogModel blogModel;
@@ -14,25 +22,107 @@ class BlogScreen extends StatefulWidget {
 }
 
 class _BlogScreenState extends State<BlogScreen> {
+  final auth = FirebaseAuth.instance;
+
+  final TextEditingController _commentController = TextEditingController();
+
   bool isLiked = false;
+  bool isWaitingCommnet = false;
   bool isWaitingLike = false;
+  bool areCommentsVisible = false;
+
+  //* 1 variables (instance - var - bool)
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  late List<CommentModel> listOfCommentsModel;
+  bool isPageLoading = true;
+
+  //* 2 intsttae
   @override
   void initState() {
     initPage();
     super.initState();
   }
 
-  initPage() async {
-    final String deviceId = await _getDeviceId();
-    // final String deviceId = auth.currentUser!.uid;
+  void initPage() async {
+    setState(() {
+      isPageLoading = true;
+    });
 
-    isLiked = widget.blogModel.listOfLikes.contains(deviceId);
+    //* Initialize the list
+    listOfCommentsModel = [];
+
+    //* Fetch the comments from Firestore
+    await firestore
+        .collection("blogs")
+        .doc(widget.blogModel.id)
+        .collection("comments")
+        .orderBy("date", descending: true)
+        .get()
+        .then((collection) {
+      List docs = collection.docs;
+
+      //* Iterate through the documents and add them to the list
+      // for (var doc in docs) {
+      //   final json = doc.data();
+      //   final CommentModel commentModel = CommentModel.fromJson(json);
+      //   log(commentModel.toString());
+      //   listOfCommentsModel.add(commentModel);
+      // }
+
+      listOfCommentsModel = docs.map((doc) {
+        final json = doc.data();
+        final CommentModel commentModel = CommentModel.fromJson(json);
+        return commentModel;
+      }).toList();
+
+      log(listOfCommentsModel.toString()); // Check if the list is populated
+    });
+
+    //* Update the state after loading is complete
+    setState(() {
+      isPageLoading = false;
+    });
+  }
+
+  refrehsPage() async {
+    //* Initialize the list
+    listOfCommentsModel = [];
+
+    //* Fetch the comments from Firestore
+    await firestore
+        .collection("blogs")
+        .doc(widget.blogModel.id)
+        .collection("comments")
+        .orderBy("date", descending: true)
+        .get()
+        .then((collection) {
+      List docs = collection.docs;
+
+      //* Iterate through the documents and add them to the list
+      // for (var doc in docs) {
+      //   final json = doc.data();
+      //   final CommentModel commentModel = CommentModel.fromJson(json);
+      //   log(commentModel.toString());
+      //   listOfCommentsModel.add(commentModel);
+      // }
+
+      listOfCommentsModel = docs.map((doc) {
+        final json = doc.data();
+        final CommentModel commentModel = CommentModel.fromJson(json);
+        return commentModel;
+      }).toList();
+
+      log(listOfCommentsModel.toString()); // Check if the list is populated
+    });
+
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return
+        //* 4 isPageLoading
+        Scaffold(
       appBar: AppBar(
         backgroundColor: ColorsApp.whiteColor,
         title: Text(
@@ -43,177 +133,320 @@ class _BlogScreenState extends State<BlogScreen> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 3,
-            decoration: const BoxDecoration(color: ColorsApp.blueColor),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey[300],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: ColorsApp.blackColor,
-                                  width: 3,
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: Image.network(
-                                  widget.blogModel.imageUrl,
-                                  fit: BoxFit.cover,
-                                  width: MediaQuery.of(context).size.width,
-                                ),
-                              ),
+      body: isPageLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Column(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 3,
+                  decoration: const BoxDecoration(color: ColorsApp.blueColor),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Blog Content Section (Image, Title, Description)
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey[300],
                             ),
-                            const SizedBox(height: 20),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    widget.blogModel.title,
-                                    style: TextStyleForms.headLineStyle04,
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    widget.blogModel.description,
-                                    style: TextStyleForms.headLineStyle03,
+                                  Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: ColorsApp.blackColor,
+                                        width: 3,
+                                      ),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Image.network(
+                                        widget.blogModel.imageUrl,
+                                        fit: BoxFit.cover,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                      ),
+                                    ),
                                   ),
                                   const SizedBox(height: 20),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              height: 60,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[400],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      //? LIKE BUTTON
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            onPressed: isWaitingLike
-                                                ? null
-                                                : () async {
-                                                    setState(() {
-                                                      isWaitingLike = true;
-                                                    });
-                                                    final String deviceId =
-                                                        await _getDeviceId();
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          widget.blogModel.title,
+                                          style: TextStyleForms.headLineStyle04,
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          widget.blogModel.description,
+                                          style: TextStyleForms.headLineStyle03,
+                                        ),
+                                        const SizedBox(height: 20),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 60,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[400],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            // LIKE BUTTON
+                                            Row(
+                                              children: [
+                                                IconButton(
+                                                  onPressed: isWaitingLike
+                                                      ? null
+                                                      : () async {
+                                                          setState(() {
+                                                            isWaitingLike =
+                                                                true;
+                                                          });
+                                                          final String userId =
+                                                              auth.currentUser!
+                                                                  .uid;
 
-                                                    List newListOfLikes = widget
-                                                        .blogModel.listOfLikes;
+                                                          List newListOfLikes =
+                                                              widget.blogModel
+                                                                  .listOfLikes;
 
-                                                    if (isLiked) {
-                                                      // unLike
-                                                      newListOfLikes
-                                                          .remove(deviceId);
-                                                      await FirebaseFirestore
-                                                          .instance
-                                                          .collection("blogs")
-                                                          .doc(widget
-                                                              .blogModel.id)
-                                                          .update({
-                                                        "listOfLikes":
+                                                          if (isLiked) {
+                                                            // unLike
                                                             newListOfLikes
-                                                      });
-                                                    } else {
-                                                      // like
+                                                                .remove(userId);
+                                                            await FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    "blogs")
+                                                                .doc(widget
+                                                                    .blogModel
+                                                                    .id)
+                                                                .update({
+                                                              "listOfLikes":
+                                                                  newListOfLikes
+                                                            });
+                                                          } else {
+                                                            // like
 
-                                                      newListOfLikes
-                                                          .add(deviceId);
-                                                      await FirebaseFirestore
-                                                          .instance
-                                                          .collection("blogs")
-                                                          .doc(widget
-                                                              .blogModel.id)
-                                                          .update({
-                                                        "listOfLikes":
                                                             newListOfLikes
-                                                      });
-                                                    }
+                                                                .add(userId);
+                                                            await FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    "blogs")
+                                                                .doc(widget
+                                                                    .blogModel
+                                                                    .id)
+                                                                .update({
+                                                              "listOfLikes":
+                                                                  newListOfLikes
+                                                            });
+                                                          }
 
-                                                    setState(() {
-                                                      isLiked = !isLiked;
-                                                      isWaitingLike = false;
-                                                    });
-                                                  },
-                                            icon: Icon(
-                                              isLiked
-                                                  ? Icons.favorite
-                                                  : Icons.favorite_border,
+                                                          setState(() {
+                                                            isLiked = !isLiked;
+                                                            isWaitingLike =
+                                                                false;
+                                                          });
+                                                        },
+                                                  icon: Icon(
+                                                    isLiked
+                                                        ? Icons.favorite
+                                                        : Icons.favorite_border,
+                                                    size: 37,
+                                                    color: ColorsApp.greyColor,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const Icon(
+                                              Icons.share_sharp,
                                               size: 37,
                                               color: ColorsApp.greyColor,
                                             ),
-                                          ),
-                                        ],
+                                            InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  areCommentsVisible =
+                                                      !areCommentsVisible;
+                                                });
+                                              },
+                                              child: Icon(
+                                                areCommentsVisible
+                                                    ? Icons.comment
+                                                    : Icons.comment_outlined,
+                                                size: 37,
+                                                color: ColorsApp.greyColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      const Row(
-                                        children: [],
-                                      ),
-                                      const Row(
-                                        children: [
-                                          Icon(
-                                            Icons.share_sharp,
-                                            size: 37,
-                                            color: ColorsApp.greyColor,
-                                          ),
-                                        ],
-                                      )
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                  const SizedBox(height: 10),
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 10),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Section to Add Your Comment
+                          !areCommentsVisible
+                              ? Container()
+                              : Column(
+                                  children: [
+                                    TextField(
+                                      controller: _commentController,
+                                      decoration: InputDecoration(
+                                        hintText: "Add your comment...",
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    ElevatedButton(
+                                      onPressed: isWaitingCommnet
+                                          ? null
+                                          : () async {
+                                              await _comment();
+                                            },
+                                      child: Text(isWaitingCommnet
+                                          ? "WAIT.."
+                                          : "Submit Comment"),
+                                    ),
+                                  ],
+                                ),
+
+                          const SizedBox(height: 20),
+
+                          // Section to View Other People's Comments
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: listOfCommentsModel
+                                .length, // Replace with actual comment count
+                            itemBuilder: (context, index) {
+                              return CommentCard(
+                                commentModel: listOfCommentsModel[index],
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
+  }
+
+  Future _comment() async {
+    setState(() {
+      isWaitingCommnet = true;
+    });
+
+    //! validtaion
+    if (_commentController.text.trim().isEmpty) {
+      CherryToast.error(
+        description: const Text("PLEASE WRITE SOMETHING"),
+      ).show(context);
+      setState(() {
+        isWaitingCommnet = false;
+      });
+      return;
+    }
+
+    //* start
+
+    //* read user name
+
+    final UserModel userModel = await firestore
+        .collection("users")
+        .doc(auth.currentUser!.uid)
+        .get()
+        .then((doc) {
+      final json = doc.data();
+      return UserModel.fromJson(json!);
+    });
+
+    final String id = const Uuid().v4();
+
+    final CommentModel commentModel = CommentModel(
+        date: DateTime.now(),
+        id: id,
+        userId: auth.currentUser!.uid,
+        username: userModel.userName,
+        description: _commentController.text.trim());
+
+    await firestore
+        .collection("blogs")
+        .doc(widget.blogModel.id)
+        .collection("comments")
+        .doc(commentModel.id) //
+        .set(commentModel.toJson());
+
+    //* finilize
+    _commentController.clear();
+
+    //*
+
+    CherryToast.success(
+      description: Text("comment add successfuly"),
+    ).show(context);
+
+    //* end
+    setState(() {
+      isWaitingCommnet = false;
+    });
+
+    refrehsPage();
   }
 }
 
-Future<String> _getDeviceId() async {
-  return "androidInfo.id";
+class CommentCard extends StatelessWidget {
+  const CommentCard({
+    super.key,
+    required this.commentModel,
+  });
+
+  final CommentModel commentModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(commentModel.username),
+      subtitle: Text(commentModel.description),
+    );
+  }
 }

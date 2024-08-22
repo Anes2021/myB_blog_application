@@ -4,8 +4,10 @@ class BlogModel {
   final String description;
   final String imageUrl;
   final List listOfLikes;
+  final DateTime createdAt;
 
   BlogModel({
+    required this.createdAt,
     required this.listOfLikes,
     required this.id,
     required this.title,
@@ -17,10 +19,11 @@ class BlogModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'listOfLikes': listOfLikes,
       'title': title,
-      'description': description,
       'imageUrl': imageUrl,
+      'description': description,
+      'listOfLikes': listOfLikes,
+      "createdAt": createdAt.toIso8601String(),
     };
   }
 
@@ -29,9 +32,10 @@ class BlogModel {
     return BlogModel(
       id: json['id'] as String,
       title: json['title'] as String,
-      description: json['description'] as String,
       imageUrl: json['imageUrl'] as String,
       listOfLikes: json["listOfLikes"] as List,
+      description: json['description'] as String,
+      createdAt: DateTime.parse(json["createdAt"]),
     );
   }
 }

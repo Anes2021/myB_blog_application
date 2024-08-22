@@ -1,12 +1,14 @@
 class CommentModel {
   final String id;
-  final String date;
+  final String userId;
+  final DateTime date;
   final String username;
   final String description;
 
   CommentModel({
     required this.date,
     required this.id,
+    required this.userId,
     required this.username,
     required this.description,
   });
@@ -17,7 +19,8 @@ class CommentModel {
       'id': id,
       'username': username,
       'description': description,
-      'date': date,
+      "userId": userId,
+      'date': date.toIso8601String(),
     };
   }
 
@@ -27,7 +30,8 @@ class CommentModel {
       id: json['id'] as String,
       username: json['username'] as String,
       description: json['description'] as String,
-      date: json['date'] as String,
+      date: DateTime.parse(json['date']),
+      userId: json['userId'] as String,
     );
   }
 }

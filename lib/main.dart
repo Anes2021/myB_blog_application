@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart'; // Add this import
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mustaqim/screens/auth/registration_screen.dart';
+import 'package:mustaqim/screens/create_blog_screen.dart';
 import 'package:mustaqim/screens/home_screen.dart'; // Your registration screen
 
 Future<void> main() async {
@@ -18,6 +19,10 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+        'home': (context) => const HomeScreen(),
+        'createBlog': (context) => const CreateBlogScreen(),
+      },
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance
             .authStateChanges(), // Listen to auth state changes

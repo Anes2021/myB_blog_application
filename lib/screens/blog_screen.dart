@@ -178,44 +178,10 @@ class _BlogScreenState extends State<BlogScreen> {
                                               color: ColorsApp.greyColor,
                                             ),
                                           ),
-                                          // Text(
-                                          //   " : ",
-                                          //   style: TextStyle(
-                                          //       fontWeight: FontWeight.bold,
-                                          //       color: ColorsApp.greyColor,
-                                          //       fontSize: 37),
-                                          // ),
-                                          // Text(
-                                          //   "21",
-                                          //   style: TextStyle(
-                                          //       fontWeight: FontWeight.bold,
-                                          //       color: ColorsApp.greyColor,
-                                          //       fontSize: 37),
-                                          // ),
                                         ],
                                       ),
                                       const Row(
-                                        children: [
-                                          Icon(
-                                            Icons.comment_sharp,
-                                            size: 37,
-                                            color: ColorsApp.greyColor,
-                                          ),
-                                          // Text(
-                                          //   " : ",
-                                          //   style: TextStyle(
-                                          //       fontWeight: FontWeight.bold,
-                                          //       color: ColorsApp.greyColor,
-                                          //       fontSize: 37),
-                                          // ),
-                                          // Text(
-                                          //   "21",
-                                          //   style: TextStyle(
-                                          //       fontWeight: FontWeight.bold,
-                                          //       color: ColorsApp.greyColor,
-                                          //       fontSize: 37),
-                                          // ),
-                                        ],
+                                        children: [],
                                       ),
                                       const Row(
                                         children: [
@@ -224,9 +190,6 @@ class _BlogScreenState extends State<BlogScreen> {
                                             size: 37,
                                             color: ColorsApp.greyColor,
                                           ),
-                                          // SizedBox(
-                                          //   width: 20,
-                                          // )
                                         ],
                                       )
                                     ],

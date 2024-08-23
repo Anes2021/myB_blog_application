@@ -56,6 +56,8 @@ class _BlogScreenState extends State<BlogScreen> {
     //* Initialize the list
     listOfCommentsModel = [];
 
+    isLiked = widget.blogModel.listOfLikes.contains(auth.currentUser!.uid);
+
     //* Fetch the comments from Firestore
     await firestore
         .collection("blogs")
@@ -399,8 +401,6 @@ class _BlogScreenState extends State<BlogScreen> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: listOfCommentsModel.length,
                             itemBuilder: (context, index) {
-                              widget.blogModel.numberOfComment =
-                                  listOfCommentsModel.length;
                               return CommentCard(
                                 commentModel: listOfCommentsModel[index],
                               );

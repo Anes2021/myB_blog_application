@@ -195,7 +195,6 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
       // UPLOAD data to firestore
       final firestore = FirebaseFirestore.instance;
       final BlogModel blogModel = BlogModel(
-          numberOfComment: 1,
           id: id,
           title: blogTitleController.text.trim(),
           description: blogDescriptionController.text.trim(),

@@ -1,33 +1,61 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/core/styles_text.dart';
 
 class BlogCard extends StatefulWidget {
-  final String numberOfLikes;
-  final String numberOfComment;
   final String titleText;
   final String descriptionText;
   final String imageUrl;
   final DateTime madeAt;
+  final List listOfLikes;
+  final String idBlog;
+
   final Function() onTap;
 
-  const BlogCard(
-      {super.key,
-      required this.titleText,
-      required this.descriptionText,
-      required this.imageUrl,
-      required this.onTap,
-      required this.madeAt,
-      required this.numberOfLikes,
-      required this.numberOfComment});
+  const BlogCard({
+    super.key,
+    required this.titleText,
+    required this.descriptionText,
+    required this.imageUrl,
+    required this.onTap,
+    required this.madeAt,
+    required this.listOfLikes,
+    required this.idBlog,
+  });
 
   @override
   State<BlogCard> createState() => _BlogCardState();
 }
 
 class _BlogCardState extends State<BlogCard> {
+  int numberOfComments = 0;
+  int numberOfLikes = 0;
+
+  @override
+  void initState() {
+    initPage();
+    super.initState();
+  }
+
+  void initPage() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    numberOfComments = await firestore
+        .collection("blogs")
+        .doc(widget.idBlog)
+        .collection("comments")
+        .get()
+        .then(
+      (v) {
+        return v.docs.length;
+      },
+    );
+    numberOfLikes = widget.listOfLikes.length;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -149,7 +177,7 @@ class _BlogCardState extends State<BlogCard> {
                                         width: 2,
                                       ),
                                       Text(
-                                        widget.numberOfLikes,
+                                        numberOfLikes.toString(),
                                         style: const TextStyle(
                                             fontSize: 15,
                                             color: ColorsApp.blackColor,
@@ -171,7 +199,7 @@ class _BlogCardState extends State<BlogCard> {
                                         width: 2,
                                       ),
                                       Text(
-                                        widget.numberOfComment,
+                                        numberOfComments.toString(),
                                         style: const TextStyle(
                                             fontSize: 15,
                                             color: ColorsApp.blackColor,

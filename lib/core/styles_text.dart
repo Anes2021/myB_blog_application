@@ -31,4 +31,8 @@ class TextStyleForms {
     textStyle: const TextStyle(
         fontSize: 24, color: ColorsApp.blackColor, fontWeight: FontWeight.bold),
   );
+  static TextStyle buttonBlue = GoogleFonts.aBeeZee(
+    textStyle: const TextStyle(
+        fontSize: 18, color: ColorsApp.blueColor, fontWeight: FontWeight.bold),
+  );
 }

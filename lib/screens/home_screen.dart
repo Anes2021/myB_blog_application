@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     await firestore
         .collection("blogs")
-        .orderBy("createdAt", descending: false)
+        .orderBy("createdAt", descending: true)
         .get()
         .then((collection) {
       final lsitOfDocs = collection.docs;
@@ -167,6 +167,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: listOfBlogs.length,
                           itemBuilder: (context, index) {
                             return BlogCard(
+                              numberOfComment:
+                                  listOfBlogs[index].numberOfComment.toString(),
+                              numberOfLikes: listOfBlogs[index]
+                                  .listOfLikes
+                                  .length
+                                  .toString(),
+                              madeAt: listOfBlogs[index].createdAt,
                               titleText: listOfBlogs[index].title, //
                               descriptionText:
                                   listOfBlogs[index].description.trim(),
@@ -184,31 +191,29 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                         ),
                       ),
-                !userModel.isAdmin
-                    ? Container()
-                    : Column(
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 3,
-                            color: ColorsApp.blueColor,
+                Column(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 3,
+                      color: ColorsApp.blueColor,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 80,
+                      color: ColorsApp.whiteColor,
+                      child: const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: ButtonForm(
+                            buttonT: "Create Blog",
+                            function: null,
                           ),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 80,
-                            color: ColorsApp.whiteColor,
-                            child: const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: ButtonForm(
-                                  buttonT: "Create Blog",
-                                  function: null,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
+                    ),
+                  ],
+                ),
               ],
             ),
     );

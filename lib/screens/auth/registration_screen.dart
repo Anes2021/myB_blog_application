@@ -4,6 +4,9 @@ import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mustaqim/core/colors.dart';
+import 'package:mustaqim/core/styles_text.dart';
+import 'package:mustaqim/core/text_field_form.dart';
 import 'package:mustaqim/screens/auth/login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -27,93 +30,95 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              'Blogify',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.blueAccent,
+      backgroundColor: ColorsApp.whiteColor,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(
+                height: 100,
+                width: 100,
               ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Made By Haneef Syed',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 40),
-            TextField(
-              controller: userNameController,
-              decoration: const InputDecoration(
-                labelText: 'UserName Controller',
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: isSubmit
-                  ? null
-                  : () async {
-                      await _register();
-                    },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
+              SizedBox(
+                height: 150,
+                width: 150,
+                child: Image.asset(
+                  'assets/images/app_icon_scaled.png',
+                  fit: BoxFit.scaleDown,
                 ),
-                backgroundColor: Colors.blueAccent,
               ),
-              child: Text(
-                isSubmit ? "WAIT .." : 'Sign Up',
-                style: const TextStyle(fontSize: 18),
+              const SizedBox(height: 40),
+              //controller: userNameController,
+              TextFieldForm(
+                textEditingController: userNameController,
+                labelT: "Username",
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Center(
-              child: InkWell(
-                  onTap: () {
-                    //
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const LoginScreen(),
-                    ));
-                  },
-                  child: const Text(
-                    "LOGIN",
-                    style: TextStyle(
-                        color: Colors.blue, fontWeight: FontWeight.bold),
-                  )),
-            )
-          ],
+              const SizedBox(height: 16),
+              TextFieldForm(
+                textEditingController: userNameController,
+                labelT: "Email",
+              ),
+              const SizedBox(height: 16),
+              TextFieldForm(
+                textEditingController: userNameController,
+                labelT: "Password",
+              ),
+              const SizedBox(height: 24),
+
+              GestureDetector(
+                onTap: isSubmit
+                    ? null
+                    : () async {
+                        await _register();
+                      },
+                child: Container(
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: ColorsApp.blackColor
+                              .withOpacity(0.3), // Shadow color with opacity
+                          spreadRadius: 5.0, // Spread radius of the shadow
+                          blurRadius: 10.0, // Blur radius of the shadow
+                          offset: const Offset(0,
+                              4), // Offset of the shadow (horizontal, vertical)
+                        ),
+                      ],
+                      border: Border.all(color: ColorsApp.blackColor, width: 2),
+                      borderRadius: BorderRadius.circular(50),
+                      color: const Color(0XFF4258E1)),
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          isSubmit ? "WAIT .." : 'Sign Up',
+                          style: TextStyleForms.buttonStyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Center(
+                child: InkWell(
+                    onTap: () {
+                      //
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ));
+                    },
+                    child: Text("LOGIN", style: TextStyleForms.buttonBlue)),
+              )
+            ],
+          ),
         ),
       ),
     );

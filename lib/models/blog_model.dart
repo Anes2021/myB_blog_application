@@ -5,8 +5,10 @@ class BlogModel {
   final String imageUrl;
   final List listOfLikes;
   final DateTime createdAt;
+  int numberOfComment;
 
   BlogModel({
+    required this.numberOfComment,
     required this.createdAt,
     required this.listOfLikes,
     required this.id,
@@ -23,7 +25,8 @@ class BlogModel {
       'imageUrl': imageUrl,
       'description': description,
       'listOfLikes': listOfLikes,
-      "createdAt": createdAt.toIso8601String(),
+      'numberOfComment': numberOfComment,
+      'createdAt': createdAt.toIso8601String(),
     };
   }
 
@@ -31,6 +34,8 @@ class BlogModel {
   factory BlogModel.fromJson(Map<String, dynamic> json) {
     return BlogModel(
       id: json['id'] as String,
+      numberOfComment:
+          (json['numberOfComment'] ?? 0) as int, // Handle null value
       title: json['title'] as String,
       imageUrl: json['imageUrl'] as String,
       listOfLikes: json["listOfLikes"] as List,

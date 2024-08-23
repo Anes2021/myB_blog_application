@@ -9,6 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/core/styles_text.dart';
+import 'package:mustaqim/core/text_field_form.dart';
 import 'package:mustaqim/models/blog_model.dart';
 import 'package:mustaqim/models/comment_model.dart';
 import 'package:mustaqim/screens/auth/registration_screen.dart';
@@ -328,46 +329,78 @@ class _BlogScreenState extends State<BlogScreen> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
 
                           // Section to Add Your Comment
                           !areCommentsVisible
                               ? Container()
                               : Column(
                                   children: [
-                                    TextField(
-                                      controller: _commentController,
-                                      decoration: InputDecoration(
-                                        hintText: "Add your comment...",
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                      ),
+                                    TextFieldForm(
+                                      textEditingController: _commentController,
+                                      labelT: "Type Your Comment",
                                     ),
                                     const SizedBox(height: 10),
-                                    ElevatedButton(
-                                      onPressed: isWaitingCommnet
+                                    GestureDetector(
+                                      onTap: isWaitingCommnet
                                           ? null
                                           : () async {
                                               await _comment();
                                             },
-                                      child: Text(isWaitingCommnet
-                                          ? "WAIT.."
-                                          : "Submit Comment"),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: ColorsApp.blackColor
+                                                    .withOpacity(
+                                                        0.3), // Shadow color with opacity
+                                                spreadRadius:
+                                                    5.0, // Spread radius of the shadow
+                                                blurRadius:
+                                                    10.0, // Blur radius of the shadow
+                                                offset: const Offset(0,
+                                                    4), // Offset of the shadow (horizontal, vertical)
+                                              ),
+                                            ],
+                                            border: Border.all(
+                                                color: ColorsApp.blackColor,
+                                                width: 2),
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            color: const Color(0XFF4258E1)),
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 12),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                isWaitingCommnet
+                                                    ? "WAIT.."
+                                                    : "Submit Comment",
+                                                style:
+                                                    TextStyleForms.buttonStyle,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
                                     ),
+                                    const SizedBox(height: 20),
                                   ],
                                 ),
-
-                          const SizedBox(height: 20),
 
                           // Section to View Other People's Comments
                           ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: listOfCommentsModel
-                                .length, // Replace with actual comment count
+                            itemCount: listOfCommentsModel.length,
                             itemBuilder: (context, index) {
+                              widget.blogModel.numberOfComment =
+                                  listOfCommentsModel.length;
                               return CommentCard(
                                 commentModel: listOfCommentsModel[index],
                               );
@@ -415,11 +448,12 @@ class _BlogScreenState extends State<BlogScreen> {
     final String id = const Uuid().v4();
 
     final CommentModel commentModel = CommentModel(
-        date: DateTime.now(),
-        id: id,
-        userId: auth.currentUser!.uid,
-        username: userModel.userName,
-        description: _commentController.text.trim());
+      date: DateTime.now(),
+      id: id,
+      userId: auth.currentUser!.uid,
+      username: userModel.userName,
+      description: _commentController.text.trim(),
+    );
 
     await firestore
         .collection("blogs")
@@ -446,7 +480,7 @@ class _BlogScreenState extends State<BlogScreen> {
   }
 }
 
-class CommentCard extends StatelessWidget {
+class CommentCard extends StatefulWidget {
   const CommentCard({
     super.key,
     required this.commentModel,
@@ -455,10 +489,51 @@ class CommentCard extends StatelessWidget {
   final CommentModel commentModel;
 
   @override
+  State<CommentCard> createState() => _CommentCardState();
+}
+
+class _CommentCardState extends State<CommentCard> {
+  @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(commentModel.username),
-      subtitle: Text(commentModel.description),
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color: Colors.grey[300], borderRadius: BorderRadius.circular(10)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      widget.commentModel.username,
+                      style: TextStyleForms.headLineStyle02,
+                    ),
+                    Spacer(),
+                    Text(
+                      widget.commentModel.date
+                          .toIso8601String()
+                          .substring(0, 10),
+                      style: TextStyleForms.headLineStyle03,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 2,
+                ),
+                Text(widget.commentModel.description,
+                    style: TextStyleForms.headLineStyle03),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        )
+      ],
     );
   }
 }

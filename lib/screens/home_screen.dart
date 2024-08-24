@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:mustaqim/core/blog_card.dart';
 import 'package:mustaqim/core/button_form.dart';
 import 'package:mustaqim/core/colors.dart';
+import 'package:mustaqim/core/drawer_tile.dart';
+import 'package:mustaqim/core/drawer_tile2.dart';
 import 'package:mustaqim/models/blog_model.dart';
 import 'package:mustaqim/screens/auth/login_screen.dart';
 import 'package:mustaqim/screens/auth/registration_screen.dart';
@@ -74,6 +74,84 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Scaffold(
         backgroundColor: Colors.grey[200],
+        drawer: Drawer(
+          width: 225,
+          backgroundColor: ColorsApp.whiteColor,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 40,
+              ),
+              SizedBox(
+                width: 150,
+                height: 150,
+                child: Image.asset(
+                  'assets/images/app_icon_scaled.png',
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+              Container(
+                height: 2,
+                color: ColorsApp.blackColor,
+              ),
+              Expanded(
+                child: Container(
+                  color: Colors.grey[200],
+                  child: Column(
+                    children: [
+                      DrawerTile(
+                        text: "Profile",
+                        function: () {
+                          null;
+                        },
+                        iconT: Icons.person,
+                      ),
+                      DrawerTile(
+                        text: "Settings",
+                        function: () {
+                          null;
+                        },
+                        iconT: Icons.settings_rounded,
+                      ),
+                      DrawerTile(
+                        text: "Favorite",
+                        function: () {
+                          null;
+                        },
+                        iconT: Icons.favorite_rounded,
+                      ),
+                      DrawerTile(
+                        text: "Blogs",
+                        function: () {
+                          null;
+                        },
+                        iconT: Icons.photo_camera_back_rounded,
+                      ),
+                      const Spacer(),
+                      DrawerTile2(
+                        iconT: Icons.info_sharp,
+                        text: "info",
+                        function: () {
+                          null;
+                        },
+                      ),
+                      DrawerTile2(
+                        iconT: Icons.call_rounded,
+                        text: "Contact us",
+                        function: () {
+                          null;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
         body: isPageLoading
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -92,19 +170,25 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            InkWell(
-                              child: Container(
-                                height: 70,
-                                width: 70,
-                                decoration: const BoxDecoration(
+                            Builder(
+                              builder: (context) => InkWell(
+                                onTap: () {
+                                  Scaffold.of(context).openDrawer();
+                                },
+                                child: Container(
+                                  height: 70,
+                                  width: 70,
+                                  decoration: const BoxDecoration(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(50)),
-                                    color: ColorsApp.whiteColor),
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.language_rounded,
-                                    size: 25,
-                                    color: ColorsApp.blueColor,
+                                    color: ColorsApp.whiteColor,
+                                  ),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.more_horiz_rounded,
+                                      size: 25,
+                                      color: ColorsApp.blueColor,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -135,9 +219,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 height: 70,
                                 width: 70,
                                 decoration: const BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(50)),
-                                    color: ColorsApp.whiteColor),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50)),
+                                  color: ColorsApp.whiteColor,
+                                ),
                                 child: const Center(
                                   child: Icon(
                                     Icons.exit_to_app_rounded,
@@ -174,18 +259,18 @@ class _HomeScreenState extends State<HomeScreen> {
                               return BlogCard(
                                 idBlog: listOfBlogs[index].id,
                                 madeAt: listOfBlogs[index].createdAt,
-                                titleText: listOfBlogs[index].title, //
+                                titleText: listOfBlogs[index].title,
                                 descriptionText:
                                     listOfBlogs[index].description.trim(),
                                 imageUrl: listOfBlogs[index].imageUrl.trim(),
                                 onTap: () {
-                                  //
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => BlogScreen(
-                                      blogModel: listOfBlogs[index],
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => BlogScreen(
+                                        blogModel: listOfBlogs[index],
+                                      ),
                                     ),
-                                  ));
-                                  //
+                                  );
                                 },
                                 listOfLikes: listOfBlogs[index].listOfLikes,
                               );

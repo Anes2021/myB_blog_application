@@ -15,6 +15,10 @@ class TextStyleForms {
     textStyle: const TextStyle(
         fontSize: 20, color: ColorsApp.whiteColor, fontWeight: FontWeight.bold),
   );
+  static TextStyle buttonStyleSmall = GoogleFonts.aBeeZee(
+    textStyle: const TextStyle(
+        fontSize: 18, color: ColorsApp.whiteColor, fontWeight: FontWeight.bold),
+  );
   static TextStyle headLineStyle01 = GoogleFonts.aBeeZee(
     textStyle: const TextStyle(
         fontSize: 22, color: ColorsApp.blackColor, fontWeight: FontWeight.bold),

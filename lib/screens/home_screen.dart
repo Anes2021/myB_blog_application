@@ -11,6 +11,8 @@ import 'package:mustaqim/models/blog_model.dart';
 import 'package:mustaqim/screens/auth/login_screen.dart';
 import 'package:mustaqim/screens/auth/registration_screen.dart';
 import 'package:mustaqim/screens/blog_screen.dart';
+import 'package:mustaqim/screens/comments_screen.dart';
+import 'package:mustaqim/screens/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -60,10 +62,11 @@ class _HomeScreenState extends State<HomeScreen> {
         .then((doc) {
       return UserModel.fromJson(doc.data()!);
     });
-
-    setState(() {
-      isPageLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isPageLoading = false;
+      });
+    }
   }
 
   @override
@@ -102,7 +105,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       DrawerTile(
                         text: "Profile",
                         function: () {
-                          null;
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const ProfileScreen(),
+                          ));
                         },
                         iconT: Icons.person,
                       ),
@@ -119,6 +124,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           null;
                         },
                         iconT: Icons.favorite_rounded,
+                      ),
+                      DrawerTile(
+                        text: "Comments",
+                        function: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const CommentsScreen(),
+                          ));
+                        },
+                        iconT: Icons.comment_rounded,
                       ),
                       DrawerTile(
                         text: "Blogs",

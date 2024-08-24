@@ -453,6 +453,7 @@ class _BlogScreenState extends State<BlogScreen> {
       userId: auth.currentUser!.uid,
       username: userModel.userName,
       description: _commentController.text.trim(),
+      blogId: widget.blogModel.id,
     );
 
     await firestore

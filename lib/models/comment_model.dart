@@ -4,9 +4,11 @@ class CommentModel {
   final String username;
   final String description;
   final DateTime date;
+  final String blogId;
 
   CommentModel({
     required this.date,
+    required this.blogId,
     required this.id,
     required this.userId,
     required this.username,
@@ -20,6 +22,7 @@ class CommentModel {
       'username': username,
       'description': description,
       "userId": userId,
+      "blogId": blogId,
       'date': date.toIso8601String(),
     };
   }
@@ -29,6 +32,7 @@ class CommentModel {
     return CommentModel(
       id: json['id'] as String,
       username: json['username'] as String,
+      blogId: json['blogId'] as String,
       description: json['description'] as String,
       date: DateTime.parse(json['date']),
       userId: json['userId'] as String,

@@ -155,6 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final String id = auth.currentUser!.uid;
 
       final UserModel userModel = UserModel(
+          userDescription: "",
           id: id,
           userName: userNameController.text.trim(),
           email: emailController.text.trim(),
@@ -188,6 +189,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 class UserModel {
   final String id;
   final String userName;
+  final String userDescription;
   final String email;
   final String password;
   final DateTime createdAt;
@@ -195,6 +197,7 @@ class UserModel {
 
   UserModel({
     required this.id,
+    required this.userDescription,
     required this.isAdmin,
     required this.userName,
     required this.email,
@@ -208,6 +211,7 @@ class UserModel {
       'id': id,
       'isAdmin': isAdmin,
       'userName': userName,
+      'userDescription': userDescription,
       'email': email,
       'password': password,
       'createdAt': createdAt.toIso8601String(),
@@ -220,6 +224,7 @@ class UserModel {
       id: json['id'],
       isAdmin: json['isAdmin'],
       userName: json['userName'],
+      userDescription: json['userDescription'],
       email: json['email'],
       password: json['password'],
       createdAt: DateTime.parse(json['createdAt']),

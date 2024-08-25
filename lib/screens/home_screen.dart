@@ -39,33 +39,61 @@ class _HomeScreenState extends State<HomeScreen> {
       isPageLoading = true;
     });
 
-    await firestore
-        .collection("blogs")
-        .orderBy("createdAt", descending: true)
-        .get()
-        .then((collection) {
-      final lsitOfDocs = collection.docs;
-      final listOfJson = lsitOfDocs.map((doc) {
-        return doc.data();
+    try {
+      await firestore
+          .collection("blogs")
+          .orderBy("createdAt", descending: true)
+          .get()
+          .then((collection) {
+        final lsitOfDocs = collection.docs;
+        final listOfJson = lsitOfDocs.map((doc) {
+          return doc.data();
+        });
+
+        listOfBlogs = listOfJson.map((json) {
+          return BlogModel.fromJson(json);
+        }).toList();
       });
 
-      listOfBlogs = listOfJson.map((json) {
-        return BlogModel.fromJson(json);
-      }).toList();
-    });
+      //* read user model
+      final currentUser = auth.currentUser;
+      if (currentUser == null) {
+        // No user is signed in, redirect to login
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+        return;
+      }
 
-    //* read user model
-    userModel = await firestore
-        .collection("users")
-        .doc(auth.currentUser!.uid)
-        .get()
-        .then((doc) {
-      return UserModel.fromJson(doc.data()!);
-    });
-    if (mounted) {
-      setState(() {
-        isPageLoading = false;
+      userModel = await firestore
+          .collection("users")
+          .doc(currentUser.uid)
+          .get()
+          .then((doc) {
+        if (doc.exists && doc.data() != null) {
+          return UserModel.fromJson(doc.data()!);
+        } else {
+          auth.signOut();
+          throw Exception("User data not found. Signed out.");
+        }
       });
+
+      if (mounted) {
+        setState(() {
+          isPageLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Error: $e");
+      await auth.signOut();
+      CherryToast.error(
+              description: const Text("Error loading data, signed out."))
+          .show(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
     }
   }
 

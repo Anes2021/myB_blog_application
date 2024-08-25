@@ -1,10 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mustaqim/core/button_form.dart';
 import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/core/styles_text.dart';
 import 'package:mustaqim/core/text_field_form.dart';
+import 'package:mustaqim/screens/auth/registration_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -16,6 +20,34 @@ class ProfileScreen extends StatefulWidget {
 class ProfileScreenState extends State<ProfileScreen> {
   TextEditingController updateUsernameController = TextEditingController();
   TextEditingController updateDescriptionController = TextEditingController();
+  late UserModel userModel;
+
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    initPage();
+    super.initState();
+  }
+
+  void initPage() async {
+    userModel = await firestore
+        .collection("users")
+        .doc(auth.currentUser!.uid)
+        .get()
+        .then((v) {
+      return UserModel.fromJson(v.data()!);
+    });
+  }
+
+  void changeName() async {
+    firestore.collection("users").doc(auth.currentUser!.uid).update({
+      "userName": updateUsernameController.text,
+      "userDescription": updateDescriptionController.text
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +119,14 @@ class ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 20),
               TextFieldForm(
                 textEditingController: updateDescriptionController,
-                labelT: "Change Your User Name",
+                labelT: "Set Your Status",
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ButtonForm(
+                buttonT: "Save Changes",
+                function: changeName,
               ),
             ],
           ),

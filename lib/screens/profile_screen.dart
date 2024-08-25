@@ -20,7 +20,9 @@ class ProfileScreen extends StatefulWidget {
 class ProfileScreenState extends State<ProfileScreen> {
   TextEditingController updateUsernameController = TextEditingController();
   TextEditingController updateDescriptionController = TextEditingController();
+
   late UserModel userModel;
+  bool isWaiting = false;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -42,9 +44,38 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   void changeName() async {
+    setState(() {
+      isWaiting = true;
+    });
     firestore.collection("users").doc(auth.currentUser!.uid).update({
       "userName": updateUsernameController.text,
       "userDescription": updateDescriptionController.text
+    });
+
+    QuerySnapshot blogSnapshot = await firestore.collection('blogs').get();
+
+    for (var blogDoc in blogSnapshot.docs) {
+      QuerySnapshot commentSnapshot = await firestore
+          .collection('blogs')
+          .doc(blogDoc.id)
+          .collection('comments')
+          .where('userId', isEqualTo: auth.currentUser!.uid)
+          .get();
+
+      for (var commentDoc in commentSnapshot.docs) {
+        // Update the userName field in each comment document
+        await firestore
+            .collection('blogs')
+            .doc(blogDoc.id)
+            .collection('comments')
+            .doc(commentDoc.id)
+            .update({
+          'username': updateUsernameController.text,
+        });
+      }
+    }
+    setState(() {
+      isWaiting = false;
     });
   }
 
@@ -125,8 +156,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                 height: 20,
               ),
               ButtonForm(
-                buttonT: "Save Changes",
-                function: changeName,
+                buttonT: isWaiting ? "Wait . . ." : "Save Changes",
+                function: isWaiting ? null : changeName,
               ),
             ],
           ),

@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -200,7 +201,8 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
           description: blogDescriptionController.text.trim(),
           imageUrl: imageUrl,
           listOfLikes: [],
-          createdAt: DateTime.now());
+          createdAt: DateTime.now(),
+          userId: FirebaseAuth.instance.currentUser!.uid);
 
       await firestore.collection("blogs").doc(id).set(blogModel.toJson());
 

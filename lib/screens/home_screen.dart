@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,7 +11,6 @@ import 'package:mustaqim/core/drawer_tile.dart';
 import 'package:mustaqim/core/drawer_tile2.dart';
 import 'package:mustaqim/models/blog_model.dart';
 import 'package:mustaqim/screens/auth/login_screen.dart';
-import 'package:mustaqim/screens/auth/registration_screen.dart';
 import 'package:mustaqim/screens/blog_screen.dart';
 import 'package:mustaqim/screens/comments_screen.dart';
 import 'package:mustaqim/screens/profile_screen.dart';
@@ -26,7 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isPageLoading = true;
   final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
-  late UserModel userModel;
 
   @override
   void initState() {
@@ -39,61 +39,36 @@ class _HomeScreenState extends State<HomeScreen> {
       isPageLoading = true;
     });
 
-    try {
-      await firestore
-          .collection("blogs")
-          .orderBy("createdAt", descending: true)
-          .get()
-          .then((collection) {
-        final lsitOfDocs = collection.docs;
-        final listOfJson = lsitOfDocs.map((doc) {
-          return doc.data();
-        });
-
-        listOfBlogs = listOfJson.map((json) {
-          return BlogModel.fromJson(json);
-        }).toList();
+    await firestore
+        .collection("blogs")
+        .orderBy("createdAt", descending: true)
+        .get()
+        .then((collection) {
+      final lsitOfDocs = collection.docs;
+      final listOfJson = lsitOfDocs.map((doc) {
+        return doc.data();
       });
 
-      //* read user model
-      final currentUser = auth.currentUser;
-      if (currentUser == null) {
-        // No user is signed in, redirect to login
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
-        );
-        return;
-      }
+      listOfBlogs = listOfJson.map((json) {
+        return BlogModel.fromJson(json);
+      }).toList();
+    });
 
-      userModel = await firestore
-          .collection("users")
-          .doc(currentUser.uid)
-          .get()
-          .then((doc) {
-        if (doc.exists && doc.data() != null) {
-          return UserModel.fromJson(doc.data()!);
-        } else {
-          auth.signOut();
-          throw Exception("User data not found. Signed out.");
-        }
-      });
-
-      if (mounted) {
-        setState(() {
-          isPageLoading = false;
-        });
-      }
-    } catch (e) {
-      print("Error: $e");
-      await auth.signOut();
-      CherryToast.error(
-              description: const Text("Error loading data, signed out."))
-          .show(context);
+    //* read user model
+    final currentUser = auth.currentUser;
+    if (currentUser == null) {
+      // No user is signed in, redirect to login
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginScreen()),
       );
+      return;
+    }
+
+    if (mounted) {
+      setState(() {
+        isPageLoading = false;
+      });
     }
   }
 
@@ -299,6 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemCount: listOfBlogs.length,
                             itemBuilder: (context, index) {
                               return BlogCard(
+                                userId: listOfBlogs[index].userId,
                                 idBlog: listOfBlogs[index].id,
                                 madeAt: listOfBlogs[index].createdAt,
                                 titleText: listOfBlogs[index].title,

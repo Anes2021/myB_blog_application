@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,10 @@ class ProfileScreenState extends State<ProfileScreen> {
         .then((v) {
       return UserModel.fromJson(v.data()!);
     });
+
+    updateDescriptionController.text = userModel.userDescription;
+    updateUsernameController.text = userModel.userName;
+    setState(() {});
   }
 
   void changeName() async {
@@ -73,6 +78,11 @@ class ProfileScreenState extends State<ProfileScreen> {
         });
       }
     }
+    CherryToast.success(
+        title: Text(
+      "Changes Saved.",
+      style: TextStyleForms.headLineStyle03,
+    )).show(context);
     setState(() {
       isWaiting = false;
     });

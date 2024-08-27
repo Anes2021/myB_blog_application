@@ -1,9 +1,13 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/core/styles_text.dart';
+import 'package:mustaqim/models/blog_model.dart';
+import 'package:mustaqim/screens/auth/registration_screen.dart';
+import 'package:popover/popover.dart';
 
 class BlogCard extends StatefulWidget {
   final String titleText;
@@ -35,15 +39,22 @@ class BlogCard extends StatefulWidget {
 class _BlogCardState extends State<BlogCard> {
   int numberOfComments = 0;
   int numberOfLikes = 0;
+  UserModel? userModel; // Make userModel nullable
+  bool isLoading = true; // Add a loading flag
 
   @override
   void initState() {
-    initPage();
     super.initState();
+    initPage();
   }
 
   void initPage() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
+    userModel =
+        await firestore.collection("users").doc(widget.userId).get().then((v) {
+      final json = v.data();
+      return UserModel.fromJson(json!);
+    });
     numberOfComments = await firestore
         .collection("blogs")
         .doc(widget.idBlog)
@@ -55,20 +66,31 @@ class _BlogCardState extends State<BlogCard> {
       },
     );
     numberOfLikes = widget.listOfLikes.length;
+    isLoading = false; // Set loading to false after data is fetched
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      // Display a loading indicator while data is being fetched
+      return const Column(
+        children: [
+          SizedBox(
+            height: 250,
+          ),
+          CircularProgressIndicator(),
+        ],
+      );
+    }
+
     return Stack(
       children: [
         GestureDetector(
           onTap: widget.onTap,
           child: Column(
             children: [
-              const SizedBox(
-                height: 5,
-              ),
+              const SizedBox(height: 5),
               SizedBox(
                 height: 20,
                 width: double.infinity,
@@ -80,16 +102,12 @@ class _BlogCardState extends State<BlogCard> {
                       height: 2,
                       width: 100,
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
+                    const SizedBox(width: 5),
                     Text(
                       widget.madeAt.toIso8601String().substring(0, 10),
                       style: TextStyleForms.headLineStyle03,
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
+                    const SizedBox(width: 5),
                     Container(
                       color: ColorsApp.greyColor,
                       height: 2,
@@ -99,12 +117,10 @@ class _BlogCardState extends State<BlogCard> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.only(
-                    bottom: 10.0, top: 10.0), // Space between each card
+                margin: const EdgeInsets.only(bottom: 10.0, top: 10.0),
                 child: Material(
-                  elevation: 5.0, // Adjust elevation as needed
-                  borderRadius: BorderRadius.circular(
-                      30), // Match with Container's borderRadius
+                  elevation: 5.0,
+                  borderRadius: BorderRadius.circular(30),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
@@ -113,13 +129,11 @@ class _BlogCardState extends State<BlogCard> {
                         color: ColorsApp.blackColor,
                         width: 2,
                       ),
-                      borderRadius: BorderRadius.circular(
-                          30), // Adjust the radius value as needed
+                      borderRadius: BorderRadius.circular(30),
                     ),
                     child: Center(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment
-                            .start, // Aligns column items to the start (left)
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -139,19 +153,18 @@ class _BlogCardState extends State<BlogCard> {
                                         borderRadius: BorderRadius.circular(50),
                                       ),
                                     ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
+                                    const SizedBox(width: 10),
                                     Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          widget.userId,
+                                          userModel?.userName ?? 'Loading...',
                                           style: TextStyleForms.headLineStyle02,
                                         ),
                                         Text(
-                                          "widget.status",
+                                          userModel?.userDescription ??
+                                              'Loading...',
                                           style: TextStyleForms.headLineStyle03,
                                         ),
                                       ],
@@ -159,26 +172,25 @@ class _BlogCardState extends State<BlogCard> {
                                     const Spacer(),
                                   ],
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
+                                const SizedBox(height: 10),
                                 Container(
-                                    height: 200,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                          color: ColorsApp.blackColor,
-                                          width: 1.5),
-                                      color: ColorsApp.greyColor,
+                                  height: 200,
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                        color: ColorsApp.blackColor,
+                                        width: 1.5),
+                                    color: ColorsApp.greyColor,
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(18),
+                                    child: Image.network(
+                                      widget.imageUrl,
+                                      fit: BoxFit.cover,
                                     ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(18),
-                                      child: Image.network(
-                                        widget.imageUrl,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -190,20 +202,16 @@ class _BlogCardState extends State<BlogCard> {
                                 Text(
                                   widget.titleText,
                                   style: TextStyleForms.headLineStyle01,
-                                  softWrap:
-                                      true, // Ensures the text wraps to the next line
+                                  softWrap: true,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 const SizedBox(height: 5),
                                 Text(
                                   widget.descriptionText,
                                   style: TextStyleForms.headLineStyle03,
-                                  softWrap:
-                                      true, // Ensures the text wraps to the next line
-                                  maxLines:
-                                      3, // Limit the description to 2 or 3 lines
-                                  overflow: TextOverflow
-                                      .ellipsis, // Show "..." at the end if text exceeds 3 lines
+                                  softWrap: true,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                                 SizedBox(
                                   height: 40,
@@ -219,9 +227,7 @@ class _BlogCardState extends State<BlogCard> {
                                             color: ColorsApp.blueColor,
                                             size: 20,
                                           ),
-                                          const SizedBox(
-                                            width: 2,
-                                          ),
+                                          const SizedBox(width: 2),
                                           Text(
                                             numberOfLikes.toString(),
                                             style: const TextStyle(
@@ -231,9 +237,7 @@ class _BlogCardState extends State<BlogCard> {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(
-                                        width: 0020,
-                                      ),
+                                      const SizedBox(width: 20),
                                       Row(
                                         children: [
                                           const Icon(
@@ -241,9 +245,7 @@ class _BlogCardState extends State<BlogCard> {
                                             color: ColorsApp.blueColor,
                                             size: 20,
                                           ),
-                                          const SizedBox(
-                                            width: 2,
-                                          ),
+                                          const SizedBox(width: 2),
                                           Text(
                                             numberOfComments.toString(),
                                             style: const TextStyle(
@@ -268,12 +270,26 @@ class _BlogCardState extends State<BlogCard> {
             ],
           ),
         ),
-        const Positioned(
+        Positioned(
           top: 50,
           left: 250,
           child: IconButton(
-            onPressed: null,
-            icon: Icon(
+            onPressed: () => showPopover(
+                context: context,
+                bodyBuilder: (context) => ItemMenu(
+                      blogModel: BlogModel(
+                          userId: widget.userId,
+                          createdAt: widget.madeAt,
+                          listOfLikes: widget.listOfLikes,
+                          id: widget.idBlog,
+                          title: widget.titleText,
+                          description: widget.descriptionText,
+                          imageUrl: widget.imageUrl),
+                      userModel: userModel!,
+                    ),
+                width: 200,
+                barrierColor: ColorsApp.blackColor.withOpacity(0.7)),
+            icon: const Icon(
               Icons.more_vert_rounded,
               color: ColorsApp.blueColor,
               size: 30,
@@ -281,6 +297,136 @@ class _BlogCardState extends State<BlogCard> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class ItemMenu extends StatelessWidget {
+  const ItemMenu({super.key, required this.blogModel, required this.userModel});
+
+  final BlogModel blogModel;
+  final UserModel userModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+            CherryToast.info(
+                title: Text(
+              "Report sent to admin successfully.",
+              style: TextStyleForms.headLineStyle03,
+            )).show(context);
+          },
+          child: Container(
+            color: ColorsApp.whiteColor,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.report_problem_rounded,
+                      size: 30, color: Colors.red),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    "Report",
+                    style: TextStyleForms.popoberRedTileStyle02,
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+            _showProfileDialog(context, userModel);
+          },
+          child: Container(
+            color: ColorsApp.whiteColor,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.person_rounded,
+                      size: 30, color: ColorsApp.blueColor),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    "See Profile",
+                    style: TextStyleForms.buttonBlue,
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showProfileDialog(BuildContext context, UserModel userModel) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.all(16.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 40,
+                    backgroundColor: ColorsApp.greyColor,
+                    // backgroundImage: NetworkImage(userModel.profileImageUrl),
+                  ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        userModel.userName,
+                        style: TextStyleForms.headLineStyle01,
+                      ),
+                      Text(
+                        userModel.userDescription,
+                        style: TextStyleForms.headLineStyle03,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Text(
+                "Joined on: ${userModel.createdAt.toIso8601String().substring(0, 10)}",
+                style: TextStyleForms.headLineStyle03,
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

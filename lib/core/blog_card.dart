@@ -344,6 +344,11 @@ class ItemMenu extends StatelessWidget {
             ),
           ),
         ),
+        Container(
+          height: 1,
+          width: 150,
+          color: ColorsApp.greyColor,
+        ),
         GestureDetector(
           onTap: () {
             Navigator.pop(context);

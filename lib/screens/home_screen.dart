@@ -13,6 +13,7 @@ import 'package:mustaqim/models/blog_model.dart';
 import 'package:mustaqim/screens/auth/login_screen.dart';
 import 'package:mustaqim/screens/blog_screen.dart';
 import 'package:mustaqim/screens/comments_screen.dart';
+import 'package:mustaqim/screens/favorites_screen.dart';
 import 'package:mustaqim/screens/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -124,7 +125,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       DrawerTile(
                         text: "Favorite",
                         function: () {
-                          null;
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const FavoritesScreen(),
+                          ));
                         },
                         iconT: Icons.favorite_rounded,
                       ),

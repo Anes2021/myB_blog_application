@@ -104,6 +104,8 @@ class FfavoritesScreenState extends State<CommentsScreen> {
                         margin: const EdgeInsets.only(top: 10),
                         width: double.infinity,
                         decoration: BoxDecoration(
+                            border: Border.all(
+                                color: ColorsApp.blackColor, width: 2),
                             color: Colors.grey[300],
                             borderRadius: BorderRadius.circular(10)),
                         child: Padding(
@@ -224,11 +226,6 @@ class FfavoritesScreenState extends State<CommentsScreen> {
                       ),
                       const SizedBox(
                         height: 10,
-                      ),
-                      Container(
-                        height: 1,
-                        width: MediaQuery.of(context).size.width / 2,
-                        color: ColorsApp.blueColor,
                       ),
                     ],
                   );

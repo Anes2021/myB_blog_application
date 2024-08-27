@@ -39,6 +39,10 @@ class TextStyleForms {
     textStyle: const TextStyle(
         fontSize: 18, color: ColorsApp.blueColor, fontWeight: FontWeight.bold),
   );
+  static TextStyle buttonBlue1 = GoogleFonts.aBeeZee(
+    textStyle: const TextStyle(
+        fontSize: 15, color: ColorsApp.blueColor, fontWeight: FontWeight.bold),
+  );
   static TextStyle popoberRedTileStyle02 = GoogleFonts.aBeeZee(
     textStyle: const TextStyle(
         fontSize: 18, color: Colors.red, fontWeight: FontWeight.bold),

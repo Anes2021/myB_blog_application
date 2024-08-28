@@ -9,8 +9,9 @@ import 'package:mustaqim/core/button_form.dart';
 import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/core/drawer_tile.dart';
 import 'package:mustaqim/core/drawer_tile2.dart';
+import 'package:mustaqim/core/styles_text.dart';
 import 'package:mustaqim/models/blog_model.dart';
-import 'package:mustaqim/screens/auth/admin_login.dart';
+import 'package:mustaqim/screens/admin_blogs_screen.dart';
 import 'package:mustaqim/screens/auth/login_screen.dart';
 import 'package:mustaqim/screens/blog_screen.dart';
 import 'package:mustaqim/screens/comments_screen.dart';
@@ -28,8 +29,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late List<BlogModel> listOfBlogs;
   bool isPageLoading = true;
+  bool isAdmin = false;
+
   final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
+  // bool isAdmin = ;
 
   @override
   void initState() {
@@ -71,6 +75,20 @@ class _HomeScreenState extends State<HomeScreen> {
     if (mounted) {
       setState(() {
         isPageLoading = false;
+      });
+    }
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(
+          FirebaseAuth.instance.currentUser!.uid,
+        )
+        .get();
+
+    // Check if the document exists and if the 'isAdmin' field is available
+    if (userDoc.exists && userDoc.data() != null) {
+      setState(() {
+        isAdmin = userDoc['isAdmin'] as bool? ?? false;
+        // ^ The local 'isAdmin' variable is assigned the value from Firestore
       });
     }
   }
@@ -219,9 +237,25 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const AdminLogin(),
-                                ));
+                                if (isAdmin) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        const AdminBlogsScreen(),
+                                  ));
+                                  CherryToast.success(
+                                    description: Text(
+                                      "You Have Admin Access Now !",
+                                      style: TextStyleForms.headLineStyle03,
+                                    ),
+                                  ).show(context);
+                                } else {
+                                  CherryToast.error(
+                                    description: Text(
+                                      "You Don't Have Access For That !",
+                                      style: TextStyleForms.headLineStyle03,
+                                    ),
+                                  ).show(context);
+                                }
                               },
                               child: SizedBox(
                                 height: 70,

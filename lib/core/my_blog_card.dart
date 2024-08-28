@@ -246,6 +246,7 @@ class _MyBlogCardState extends State<MyBlogCard> {
                 await widget.deleteFunction(); // Call the delete function
 
                 Navigator.of(context).pop();
+                Navigator.of(context).pop();
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const MyBlogsScreen(),
                 ));

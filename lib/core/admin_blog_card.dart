@@ -7,7 +7,7 @@ import 'package:mustaqim/models/blog_model.dart';
 import 'package:mustaqim/screens/auth/registration_screen.dart';
 import 'package:popover/popover.dart';
 
-class BlogCard extends StatefulWidget {
+class AdminBlogCard extends StatefulWidget {
   final String titleText;
   final String descriptionText;
   final String imageUrl;
@@ -18,7 +18,7 @@ class BlogCard extends StatefulWidget {
 
   final Function() onTap;
 
-  const BlogCard({
+  const AdminBlogCard({
     super.key,
     required this.titleText,
     required this.descriptionText,
@@ -31,10 +31,10 @@ class BlogCard extends StatefulWidget {
   });
 
   @override
-  State<BlogCard> createState() => _BlogCardState();
+  State<AdminBlogCard> createState() => _AdminBlogCardState();
 }
 
-class _BlogCardState extends State<BlogCard> {
+class _AdminBlogCardState extends State<AdminBlogCard> {
   int numberOfComments = 0;
   int numberOfLikes = 0;
   UserModel? userModel; // Make userModel nullable
@@ -58,9 +58,11 @@ class _BlogCardState extends State<BlogCard> {
         .doc(widget.idBlog)
         .collection("comments")
         .get()
-        .then((v) {
-      return v.docs.length;
-    });
+        .then(
+      (v) {
+        return v.docs.length;
+      },
+    );
     numberOfLikes = widget.listOfLikes.length;
     isLoading = false; // Set loading to false after data is fetched
     setState(() {});
@@ -184,8 +186,7 @@ class _BlogCardState extends State<BlogCard> {
                                               ),
                                               userModel: userModel!,
                                             ),
-                                            direction: PopoverDirection.top,
-                                            width: 200,
+                                            width: 300,
                                             barrierColor: ColorsApp.blackColor
                                                 .withOpacity(0.7),
                                             arrowHeight: 15,
@@ -234,16 +235,13 @@ class _BlogCardState extends State<BlogCard> {
                                   Text(
                                     widget.titleText,
                                     style: TextStyleForms.headLineStyle01,
-                                    softWrap: true,
-                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: null,
                                   ),
                                   const SizedBox(height: 5),
                                   Text(
                                     widget.descriptionText,
                                     style: TextStyleForms.headLineStyle03,
-                                    softWrap: true,
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: null,
                                   ),
                                   SizedBox(
                                     height: 40,
@@ -315,15 +313,6 @@ class ItemMenu extends StatelessWidget {
   final BlogModel blogModel;
   final UserModel userModel;
 
-  void sendReport() async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-    await firestore
-        .collection("reported-blogs")
-        .doc(blogModel.id)
-        .set(blogModel.toJson());
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -336,10 +325,9 @@ class ItemMenu extends StatelessWidget {
             Navigator.pop(context);
             CherryToast.info(
                 title: Text(
-              "Report sent to admin successfully.",
+              "Blog Deleted From Application.",
               style: TextStyleForms.headLineStyle03,
             )).show(context);
-            sendReport();
           },
           child: Container(
             color: ColorsApp.whiteColor,
@@ -348,13 +336,12 @@ class ItemMenu extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.report_problem_rounded,
-                      size: 30, color: Colors.red),
+                  const Icon(Icons.delete_rounded, size: 30, color: Colors.red),
                   const SizedBox(
                     width: 10,
                   ),
                   Text(
-                    "Report",
+                    "Delete Blog",
                     style: TextStyleForms.popoberRedTileStyle02,
                   )
                 ],
@@ -370,7 +357,6 @@ class ItemMenu extends StatelessWidget {
         GestureDetector(
           onTap: () {
             Navigator.pop(context);
-            _showProfileDialog(context, userModel);
           },
           child: Container(
             color: ColorsApp.whiteColor,
@@ -379,13 +365,42 @@ class ItemMenu extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.person_rounded,
+                  const Icon(Icons.block_rounded, size: 30, color: Colors.red),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    "Delete and Block User",
+                    style: TextStyleForms.popoberRedTileStyle02,
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+        Container(
+          height: 1,
+          width: 150,
+          color: ColorsApp.greyColor,
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Container(
+            color: ColorsApp.whiteColor,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.check_rounded,
                       size: 30, color: ColorsApp.blueColor),
                   const SizedBox(
                     width: 10,
                   ),
                   Text(
-                    "See Profile",
+                    "Refuse Report",
                     style: TextStyleForms.buttonBlue,
                   )
                 ],
@@ -394,62 +409,6 @@ class ItemMenu extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  void _showProfileDialog(BuildContext context, UserModel userModel) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: const EdgeInsets.all(16.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 40,
-                    backgroundColor: ColorsApp.greyColor,
-                    // backgroundImage: NetworkImage(userModel.profileImageUrl),
-                  ),
-                  const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        userModel.userName,
-                        style: TextStyleForms.headLineStyle01,
-                      ),
-                      Text(
-                        userModel.userDescription,
-                        style: TextStyleForms.headLineStyle03,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Text(
-                "Joined on: ${userModel.createdAt.toIso8601String().substring(0, 10)}",
-                style: TextStyleForms.headLineStyle03,
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("Close"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }

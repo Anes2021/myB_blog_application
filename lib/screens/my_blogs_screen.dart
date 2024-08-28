@@ -77,6 +77,7 @@ class _MyBlogsScreenState extends State<MyBlogsScreen> {
                   idBlog: blog.id,
                   deleteFunction: () async {
                     await firestore.collection("blogs").doc(blog.id).delete();
+                    initPage();
                   },
                 );
               },

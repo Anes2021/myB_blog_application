@@ -52,11 +52,13 @@ class _LoginScreenState extends State<LoginScreen> {
               TextFieldForm(
                 textEditingController: emailController,
                 labelT: "Email",
+                maxLines: 1,
               ),
               const SizedBox(height: 16),
               TextFieldForm(
                 textEditingController: passwordController,
                 labelT: "Password",
+                maxLines: 1,
               ),
               const SizedBox(height: 24),
               GestureDetector(

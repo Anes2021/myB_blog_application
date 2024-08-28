@@ -136,12 +136,14 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
                   TextFieldForm(
                     textEditingController: blogTitleController,
                     labelT: 'Title',
+                    maxLines: 1,
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   TextFieldForm(
                       textEditingController: blogDescriptionController,
+                      maxLines: 2,
                       labelT: 'Description'),
                   const SizedBox(
                     height: 20,

@@ -196,69 +196,73 @@ class _BlogCardState extends State<BlogCard> {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.titleText,
-                                  style: TextStyleForms.headLineStyle01,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  widget.descriptionText,
-                                  style: TextStyleForms.headLineStyle03,
-                                  softWrap: true,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                SizedBox(
-                                  height: 40,
-                                  width: double.infinity,
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.favorite,
-                                            color: ColorsApp.blueColor,
-                                            size: 20,
-                                          ),
-                                          const SizedBox(width: 2),
-                                          Text(
-                                            numberOfLikes.toString(),
-                                            style: const TextStyle(
-                                                fontSize: 15,
-                                                color: ColorsApp.blackColor,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(width: 20),
-                                      Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.comment,
-                                            color: ColorsApp.blueColor,
-                                            size: 20,
-                                          ),
-                                          const SizedBox(width: 2),
-                                          Text(
-                                            numberOfComments.toString(),
-                                            style: const TextStyle(
-                                                fontSize: 15,
-                                                color: ColorsApp.blackColor,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.titleText,
+                                    style: TextStyleForms.headLineStyle01,
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    widget.descriptionText,
+                                    style: TextStyleForms.headLineStyle03,
+                                    softWrap: true,
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(
+                                    height: 40,
+                                    width: double.infinity,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.favorite,
+                                              color: ColorsApp.blueColor,
+                                              size: 20,
+                                            ),
+                                            const SizedBox(width: 2),
+                                            Text(
+                                              numberOfLikes.toString(),
+                                              style: const TextStyle(
+                                                  fontSize: 15,
+                                                  color: ColorsApp.blackColor,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(width: 20),
+                                        Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.comment,
+                                              color: ColorsApp.blueColor,
+                                              size: 20,
+                                            ),
+                                            const SizedBox(width: 2),
+                                            Text(
+                                              numberOfComments.toString(),
+                                              style: const TextStyle(
+                                                  fontSize: 15,
+                                                  color: ColorsApp.blackColor,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],

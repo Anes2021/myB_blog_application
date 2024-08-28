@@ -155,11 +155,13 @@ class ProfileScreenState extends State<ProfileScreen> {
               TextFieldForm(
                 textEditingController: updateUsernameController,
                 labelT: "Change Your User Name",
+                maxLines: 1,
               ),
               const SizedBox(height: 20),
               TextFieldForm(
                 textEditingController: updateDescriptionController,
                 labelT: "Set Your Status",
+                maxLines: 1,
               ),
               const SizedBox(
                 height: 20,

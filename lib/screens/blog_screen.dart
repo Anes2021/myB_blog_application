@@ -191,21 +191,26 @@ class _BlogScreenState extends State<BlogScreen> {
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 20),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          widget.blogModel.title,
-                                          style: TextStyleForms.headLineStyle04,
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Text(
-                                          widget.blogModel.description,
-                                          style: TextStyleForms.headLineStyle03,
-                                        ),
-                                        const SizedBox(height: 20),
-                                      ],
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            widget.blogModel.title,
+                                            style:
+                                                TextStyleForms.headLineStyle04,
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            widget.blogModel.description,
+                                            style:
+                                                TextStyleForms.headLineStyle03,
+                                          ),
+                                          const SizedBox(height: 20),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   Container(
@@ -341,6 +346,7 @@ class _BlogScreenState extends State<BlogScreen> {
                                     TextFieldForm(
                                       textEditingController: _commentController,
                                       labelT: "Type Your Comment",
+                                      maxLines: 1,
                                     ),
                                     const SizedBox(height: 10),
                                     GestureDetector(

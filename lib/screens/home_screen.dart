@@ -10,10 +10,12 @@ import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/core/drawer_tile.dart';
 import 'package:mustaqim/core/drawer_tile2.dart';
 import 'package:mustaqim/models/blog_model.dart';
+import 'package:mustaqim/screens/auth/admin_login.dart';
 import 'package:mustaqim/screens/auth/login_screen.dart';
 import 'package:mustaqim/screens/blog_screen.dart';
 import 'package:mustaqim/screens/comments_screen.dart';
 import 'package:mustaqim/screens/favorites_screen.dart';
+import 'package:mustaqim/screens/my_blogs_screen.dart';
 import 'package:mustaqim/screens/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -123,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         iconT: Icons.settings_rounded,
                       ),
                       DrawerTile(
-                        text: "Favorite",
+                        text: "My Favorite",
                         function: () {
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => const FavoritesScreen(),
@@ -132,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         iconT: Icons.favorite_rounded,
                       ),
                       DrawerTile(
-                        text: "Comments",
+                        text: "My Comments",
                         function: () {
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => const CommentsScreen(),
@@ -141,9 +143,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         iconT: Icons.comment_rounded,
                       ),
                       DrawerTile(
-                        text: "Blogs",
+                        text: "My Blogs",
                         function: () {
-                          null;
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const MyBlogsScreen(),
+                          ));
                         },
                         iconT: Icons.photo_camera_back_rounded,
                       ),
@@ -213,12 +217,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: 70,
-                              width: 70,
-                              child: Image.asset(
-                                'assets/images/app_icon_scaled.png',
-                                fit: BoxFit.scaleDown,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const AdminLogin(),
+                                ));
+                              },
+                              child: SizedBox(
+                                height: 70,
+                                width: 70,
+                                child: Image.asset(
+                                  'assets/images/app_icon_scaled.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
                               ),
                             ),
                             InkWell(

@@ -100,10 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
         initPage();
       },
       child: Scaffold(
-        backgroundColor: Colors.grey[200],
         drawer: Drawer(
           width: 225,
-          backgroundColor: ColorsApp.whiteColor,
           child: Column(
             children: [
               const SizedBox(

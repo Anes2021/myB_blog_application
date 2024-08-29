@@ -158,13 +158,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final String id = auth.currentUser!.uid;
 
       final UserModel userModel = UserModel(
-          userDescription: "",
-          id: id,
-          userName: userNameController.text.trim(),
-          email: emailController.text.trim(),
-          password: passwordController.text.trim(),
-          createdAt: DateTime.now(),
-          isAdmin: false);
+        userDescription: "",
+        id: id,
+        userName: userNameController.text.trim(),
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+        createdAt: DateTime.now(),
+        isAdmin: false,
+        isBlocked: false,
+      );
 
       //* send to firestore
       await firestore.collection("users").doc(id).set(userModel.toJson());
@@ -197,11 +199,13 @@ class UserModel {
   final String password;
   final DateTime createdAt;
   final bool isAdmin;
+  final bool isBlocked;
 
   UserModel({
     required this.id,
     required this.userDescription,
     required this.isAdmin,
+    required this.isBlocked,
     required this.userName,
     required this.email,
     required this.password,
@@ -213,6 +217,7 @@ class UserModel {
     return {
       'id': id,
       'isAdmin': isAdmin,
+      'isBlocked': isBlocked,
       'userName': userName,
       'userDescription': userDescription,
       'email': email,
@@ -226,6 +231,7 @@ class UserModel {
     return UserModel(
       id: json['id'],
       isAdmin: json['isAdmin'],
+      isBlocked: json['isBlocked'],
       userName: json['userName'],
       userDescription: json['userDescription'],
       email: json['email'],

@@ -1,3 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:developer';
+
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -321,7 +325,19 @@ class ItemMenu extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
-          onTap: () {
+          onTap: () async {
+            //! remove from BLOGS
+            await FirebaseFirestore.instance
+                .collection("blogs")
+                .doc(blogModel.id)
+                .delete();
+            //! remove from REPORTED-BLOGS
+
+            await FirebaseFirestore.instance
+                .collection("reported-blogs")
+                .doc(blogModel.id)
+                .delete();
+
             Navigator.pop(context);
             CherryToast.info(
                 title: Text(
@@ -355,8 +371,30 @@ class ItemMenu extends StatelessWidget {
           color: ColorsApp.greyColor,
         ),
         GestureDetector(
-          onTap: () {
+          onTap: () async {
+            //! BLOCK USER !!
+            log(userModel.id.toString());
+            await FirebaseFirestore.instance
+                .collection("users")
+                .doc(userModel.id)
+                .update({'isBlocked': true});
+
+            //! remove from BLOGS
+            await FirebaseFirestore.instance
+                .collection("blogs")
+                .doc(blogModel.id)
+                .delete();
+            //! remove from REPORTED-BLOGS
+            await FirebaseFirestore.instance
+                .collection("reported-blogs")
+                .doc(blogModel.id)
+                .delete();
             Navigator.pop(context);
+            CherryToast.info(
+                title: Text(
+              "Blog Deleted From Application.",
+              style: TextStyleForms.headLineStyle03,
+            )).show(context);
           },
           child: Container(
             color: ColorsApp.whiteColor,
@@ -384,8 +422,17 @@ class ItemMenu extends StatelessWidget {
           color: ColorsApp.greyColor,
         ),
         GestureDetector(
-          onTap: () {
+          onTap: () async {
+            await FirebaseFirestore.instance
+                .collection("reported-blogs")
+                .doc(blogModel.id)
+                .delete();
             Navigator.pop(context);
+            CherryToast.success(
+                title: Text(
+              "Report Refused.",
+              style: TextStyleForms.headLineStyle03,
+            )).show(context);
           },
           child: Container(
             color: ColorsApp.whiteColor,

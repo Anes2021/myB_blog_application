@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:mustaqim/core/colors.dart';
 import 'package:mustaqim/core/styles_text.dart';
 import 'package:mustaqim/core/text_field_form.dart';
+import 'package:mustaqim/main.dart';
 import 'package:mustaqim/screens/auth/registration_screen.dart';
-import 'package:mustaqim/screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -148,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ).show(context);
 
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
+        builder: (context) => const MainApp(),
       ));
     } on FirebaseAuthException catch (e) {
       CherryToast.error(

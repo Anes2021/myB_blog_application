@@ -30,7 +30,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorsApp.whiteColor,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -69,6 +69,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 labelT: "Password",
                 maxLines: 1,
               ),
+
               const SizedBox(height: 24),
 
               GestureDetector(
@@ -166,6 +167,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         createdAt: DateTime.now(),
         isAdmin: false,
         isBlocked: false,
+        imageUrl: '',
       );
 
       //* send to firestore
@@ -200,29 +202,33 @@ class UserModel {
   final DateTime createdAt;
   final bool isAdmin;
   final bool isBlocked;
+  final String imageUrl;
 
-  UserModel({
+  // Named parameters constructor
+  const UserModel({
     required this.id,
-    required this.userDescription,
-    required this.isAdmin,
-    required this.isBlocked,
     required this.userName,
+    required this.userDescription,
     required this.email,
     required this.password,
     required this.createdAt,
+    required this.isAdmin,
+    required this.isBlocked,
+    required this.imageUrl,
   });
 
   // Convert a UserModel instance to a Map (JSON)
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'isAdmin': isAdmin,
-      'isBlocked': isBlocked,
       'userName': userName,
       'userDescription': userDescription,
       'email': email,
       'password': password,
       'createdAt': createdAt.toIso8601String(),
+      'isAdmin': isAdmin,
+      'isBlocked': isBlocked,
+      'imageUrl': imageUrl,
     };
   }
 
@@ -230,13 +236,14 @@ class UserModel {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'],
-      isAdmin: json['isAdmin'],
-      isBlocked: json['isBlocked'],
       userName: json['userName'],
       userDescription: json['userDescription'],
       email: json['email'],
       password: json['password'],
       createdAt: DateTime.parse(json['createdAt']),
+      isAdmin: json['isAdmin'] ?? false,
+      isBlocked: json['isBlocked'] ?? false,
+      imageUrl: json['imageUrl'] ?? '',
     );
   }
 }

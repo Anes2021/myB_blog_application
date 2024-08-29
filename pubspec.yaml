@@ -7,6 +7,7 @@ environment:
   sdk: '>=3.4.4 <4.0.0'
 
 dependencies:
+  cached_network_image: ^3.4.1
   cherry_toast: ^1.11.0
   cloud_firestore:
   device_info_plus: ^10.1.2
@@ -15,11 +16,13 @@ dependencies:
   firebase_storage: 
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
   google_fonts: 
   image_picker: 
   path_provider: ^2.1.4
   popover: ^0.3.0+1
   random_string: ^2.3.1
+  rename: ^3.0.2
   share_plus: ^10.0.2
   uuid: ^4.4.2
 
@@ -34,3 +37,20 @@ flutter:
   assets:
     - assets/images/
 
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/play_store_512.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/images/play_store_512.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+  windows:
+    generate: true
+    image_path: "assets/images/play_store_512.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/images/play_store_512.png"

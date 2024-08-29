@@ -55,7 +55,6 @@ class _AdminBlogsScreenState extends State<AdminBlogsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Row(
           children: [

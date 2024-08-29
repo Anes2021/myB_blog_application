@@ -66,7 +66,6 @@ class FfavoritesScreenState extends State<CommentsScreen> {
         getCommentsByUser();
       },
       child: Scaffold(
-        backgroundColor: Colors.grey[200],
         appBar: AppBar(
           title: Column(
             children: [

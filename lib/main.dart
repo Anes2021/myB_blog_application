@@ -24,7 +24,7 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   bool isPageLoading = true;
-  late bool isBlocked;
+  late bool isBlocked = false;
 
   @override
   void initState() {

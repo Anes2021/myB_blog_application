@@ -24,6 +24,7 @@ dependencies:
   random_string: ^2.3.1
   rename: ^3.0.2
   share_plus: ^10.0.2
+  url_launcher: ^6.3.0
   uuid: ^4.4.2
 
 dev_dependencies:

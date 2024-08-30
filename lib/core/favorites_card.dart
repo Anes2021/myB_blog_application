@@ -29,14 +29,6 @@ class FavoritesCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: ColorsApp.blackColor, width: 2),
-                      borderRadius: BorderRadius.circular(50),
-                      color: ColorsApp.greyColor),
-                ),
                 const SizedBox(
                   width: 10,
                 ),
@@ -81,9 +73,12 @@ class FavoritesCard extends StatelessWidget {
                   "Title :",
                   style: TextStyleForms.buttonBlue1,
                 ),
-                Text(
-                  blogTitle,
-                  style: TextStyleForms.headLineStyle03,
+                Expanded(
+                  child: Text(
+                    blogTitle,
+                    style: TextStyleForms.headLineStyle03,
+                    maxLines: 100,
+                  ),
                 ),
               ],
             )

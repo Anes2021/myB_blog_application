@@ -18,6 +18,7 @@ import 'package:mustaqim/screens/comments_screen.dart';
 import 'package:mustaqim/screens/favorites_screen.dart';
 import 'package:mustaqim/screens/my_blogs_screen.dart';
 import 'package:mustaqim/screens/profile_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late List<BlogModel> listOfBlogs;
   bool isPageLoading = true;
   bool isAdmin = false;
+  final String linkedInUrl = 'https://www.linkedin.com/in/anes-hellalet/';
 
   final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
@@ -134,13 +136,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         iconT: Icons.person,
                       ),
                       DrawerTile(
-                        text: "Settings",
-                        function: () {
-                          null;
-                        },
-                        iconT: Icons.settings_rounded,
-                      ),
-                      DrawerTile(
                         text: "My Favorite",
                         function: () {
                           Navigator.of(context).push(MaterialPageRoute(
@@ -169,17 +164,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const Spacer(),
                       DrawerTile2(
-                        iconT: Icons.info_sharp,
-                        text: "info",
-                        function: () {
-                          null;
-                        },
-                      ),
-                      DrawerTile2(
                         iconT: Icons.call_rounded,
                         text: "Contact us",
-                        function: () {
-                          null;
+                        function: () async {
+                          final Uri url = Uri.parse(linkedInUrl);
+                          if (await canLaunchUrl(url)) {
+                            await launchUrl(url);
+                          } else {
+                            // Handle the case where the URL can't be opened
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content:
+                                      Text('Could not open LinkedIn profile')),
+                            );
+                          }
                         },
                       ),
                       const SizedBox(

@@ -47,9 +47,7 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const HomeScreen(),
-                        ));
+                        Navigator.of(context).pop();
                       },
                       child: Container(
                         decoration: BoxDecoration(

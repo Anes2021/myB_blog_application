@@ -440,10 +440,39 @@ class ItemMenu extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const CircleAvatar(
-                    radius: 40,
-                    backgroundColor: ColorsApp.greyColor,
-                    // backgroundImage: NetworkImage(userModel.profileImageUrl),
+                  Container(
+                    height: 60,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      color: ColorsApp.greyColor,
+                      border: Border.all(color: ColorsApp.blackColor, width: 2),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: userModel.imageUrl.isEmpty
+                          ? const Center(
+                              child: Icon(
+                                Icons.person,
+                                size: 45,
+                                color: ColorsApp.whiteColor,
+                              ),
+                            )
+                          : CachedNetworkImage(
+                              imageUrl: userModel.imageUrl,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Center(
+                                child: Icon(
+                                  Icons.error,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                    ),
                   ),
                   const SizedBox(width: 16),
                   Column(

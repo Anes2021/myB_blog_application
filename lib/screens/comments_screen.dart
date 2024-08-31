@@ -66,6 +66,7 @@ class FfavoritesScreenState extends State<CommentsScreen> {
         getCommentsByUser();
       },
       child: Scaffold(
+        backgroundColor: Colors.grey[200],
         appBar: AppBar(
           title: Column(
             children: [
@@ -150,6 +151,21 @@ class FfavoritesScreenState extends State<CommentsScreen> {
                                               isDeleting = false;
                                             });
                                           },
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: ColorsApp.blackColor,
+                                              width: 2),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Colors.red),
+                                      child: const Icon(
+                                        Icons.delete_rounded,
+                                        color: ColorsApp.whiteColor,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),

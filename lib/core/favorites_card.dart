@@ -68,6 +68,7 @@ class FavoritesCard extends StatelessWidget {
               height: 10,
             ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   "Title :",

@@ -2,6 +2,15 @@
 
 Welcome to **My Blog App**—a Flutter-based mobile application that empowers users to share their ideas with the world! This app provides a seamless experience for creating, editing, and managing blog posts, while also fostering a safe and interactive community.
 
+## 📸 Screenshots
+
+![Screenshot 1](assets/screenshots/1.png)
+![Screenshot 2](assets/screenshots/2.png)
+![Screenshot 3](assets/screenshots/3.png)
+![Screenshot 4](assets/screenshots/4.png)
+![Screenshot 5](assets/screenshots/5.png)
+![Screenshot 6](assets/screenshots/6.png)
+
 ## 🌟 Features
 
 ![Create Blogs](https://img.shields.io/badge/✍️%20Create%20Blogs-blue)
@@ -33,23 +42,6 @@ Swiftly navigate the app using the handy Flutter drawer.
 
 ![Simple Admin System](https://img.shields.io/badge/🛡️%20Simple%20Admin%20System-darkred)
 Admins can view reported blogs, remove harmful content, and block users to ensure a safe community.
-
-## 📸 Screenshots
-
-### 🏠 Home Screen
-Display Blogs, accounts, likes, comments, and more!
-
-![Home Screen](images/home_screen.png)
-
-### ❤️ Favorites Screen
-View and revisit the blogs you love on your Favorites screen.
-
-![Favorites Screen](images/favorites_screen.png)
-
-### ✏️ Blogs Screen
-Browse and manage the blogs you've posted.
-
-![Blogs Screen](images/blogs_screen.png)
 
 ## 📞 Contact Us
 

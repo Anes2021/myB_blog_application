@@ -66,6 +66,7 @@ These technologies work together to provide a seamless and robust experience for
 If you have any questions or feedback, feel free to reach out:
 
 - **Facebook**: [Facebook](https://facebook.com/yourprofile)
+- **Facebook**: [WhatsApp](https://wa.me/213559619523)
 - **LinkedIn**: [LinkedIn](linkedin.com/in/anes-hellalet/)
 
 We hope you enjoy using My Blog App as much as we enjoyed building it! 🚀

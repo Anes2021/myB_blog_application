@@ -49,11 +49,15 @@ Admins can view reported blogs, remove harmful content, and block users to ensur
 
 Our app is built using some of the latest and greatest technologies! Here’s what powers **My Blog App**:
 
-- 🎯 **Flutter**: The powerful UI toolkit that allows us to build natively compiled applications for mobile, web, and desktop from a single codebase.
-- 🔥 **Firebase**:
-  - **Firestore**: Our real-time NoSQL cloud database for storing and syncing data across all users instantly.
-  - **Storage**: Securely store and serve user-generated content like images and files.
-- 🗃️ **ObjectBox**: A super-fast and lightweight database solution for offline data storage, ensuring your data is always available, even when you're not connected to the internet.
+![Flutter](https://img.shields.io/badge/🎯%20Flutter-blue)
+The powerful UI toolkit that allows us to build natively compiled applications for mobile, web, and desktop from a single codebase.
+
+![Firebase](https://img.shields.io/badge/🔥%20Firebase-orange)
+- **Firestore**: Our real-time NoSQL cloud database for storing and syncing data across all users instantly.
+- **Storage**: Securely store and serve user-generated content like images and files.
+
+![ObjectBox](https://img.shields.io/badge/🗃️%20ObjectBox-teal)
+A super-fast and lightweight database solution for offline data storage, ensuring your data is always available, even when you're not connected to the internet.
 
 These technologies work together to provide a seamless and robust experience for our users. 🚀
 

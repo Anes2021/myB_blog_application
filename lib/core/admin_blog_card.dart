@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class AdminBlogCard extends StatefulWidget {
 class _AdminBlogCardState extends State<AdminBlogCard> {
   int numberOfComments = 0;
   int numberOfLikes = 0;
-  UserModel? userModel; // Make userModel nullable
+  late UserModel userModel; // Make userModel nullable
   bool isLoading = true; // Add a loading flag
 
   @override
@@ -154,6 +155,34 @@ class _AdminBlogCardState extends State<AdminBlogCard> {
                                             width: 2),
                                         borderRadius: BorderRadius.circular(50),
                                       ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: userModel.imageUrl.isEmpty
+                                            ? const Center(
+                                                child: Icon(
+                                                  Icons.person,
+                                                  size: 45,
+                                                  color: ColorsApp.whiteColor,
+                                                ),
+                                              )
+                                            : CachedNetworkImage(
+                                                imageUrl: userModel.imageUrl,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    const Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const Center(
+                                                  child: Icon(
+                                                    Icons.error,
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                              ),
+                                      ),
                                     ),
                                     const SizedBox(width: 10),
                                     Column(
@@ -161,12 +190,11 @@ class _AdminBlogCardState extends State<AdminBlogCard> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          userModel?.userName ?? 'Loading...',
+                                          userModel.userName,
                                           style: TextStyleForms.headLineStyle02,
                                         ),
                                         Text(
-                                          userModel?.userDescription ??
-                                              'Loading...',
+                                          userModel.userDescription,
                                           style: TextStyleForms.headLineStyle03,
                                         ),
                                       ],
@@ -188,7 +216,7 @@ class _AdminBlogCardState extends State<AdminBlogCard> {
                                                     widget.descriptionText,
                                                 imageUrl: widget.imageUrl,
                                               ),
-                                              userModel: userModel!,
+                                              userModel: userModel,
                                             ),
                                             width: 300,
                                             barrierColor: ColorsApp.blackColor

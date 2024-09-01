@@ -62,7 +62,7 @@ class _AdminBlogsScreenState extends State<AdminBlogsScreen> {
                 size: 21, color: ColorsApp.blueColor),
             const SizedBox(width: 10),
             Text(
-              "My Blogs",
+              "Reported Blogs",
               style: TextStyleForms.buttonBlue,
             ),
           ],

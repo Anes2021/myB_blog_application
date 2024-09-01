@@ -4,17 +4,36 @@ Welcome to **My Blog App**—a Flutter-based mobile application that empowers us
 
 ## 🌟 Features
 
-- **Create Blogs**: Share your thoughts and ideas by creating new blog posts.
-- **Report Blogs**: Help maintain community standards by reporting blogs that seem illegal or violate guidelines.
-- **Comment and Like**: Engage with the community by commenting on and liking your favorite blog posts.
-- **Edit Profile**: Customize your profile and keep your information up-to-date.
-- **See Other Profiles**: Explore profiles of other users and discover their content.
-- **Delete or Edit Blogs**: Easily manage your content by editing or deleting your blog posts.
-- **Delete Comments**: Maintain the quality of your blog by removing unwanted comments.
-- **Simple Authentication System**: Securely register and log in to your account with robust error handling and session management.
-- **Flutter Drawer for Fast Navigation**: Navigate through the app quickly and efficiently using the built-in Flutter drawer.
-- **Simple Admin System**: Administrators can view reported blogs, delete harmful content, and block users to keep the community safe.
-- 
+![Create Blogs](https://img.shields.io/badge/✍️%20Create%20Blogs-blue)
+Share your thoughts and ideas by crafting new blog posts.
+
+![Report Blogs](https://img.shields.io/badge/🚨%20Report%20Blogs-red)
+Keep the community safe by reporting any blogs that seem illegal or violate guidelines.
+
+![Comment and Like](https://img.shields.io/badge/💬%20Comment%20and%20Like-green)
+Get involved by commenting on and liking the blogs you enjoy the most.
+
+![Edit Profile](https://img.shields.io/badge/🛠️%20Edit%20Profile-orange)
+Personalize your profile and keep your information fresh.
+
+![See Other Profiles](https://img.shields.io/badge/👥%20See%20Other%20Profiles-purple)
+Discover and explore the profiles of other users.
+
+![Delete or Edit Blogs](https://img.shields.io/badge/📝%20Delete%20or%20Edit%20Blogs-brown)
+Easily manage your posts by editing or deleting them whenever needed.
+
+![Delete Comments](https://img.shields.io/badge/🗑️%20Delete%20Comments-gray)
+Keep your blog clean by removing unwanted comments.
+
+![Simple Authentication System](https://img.shields.io/badge/🔐%20Simple%20Authentication%20System-teal)
+Securely register and log in with strong error handling and session management.
+
+![Flutter Drawer for Fast Navigation](https://img.shields.io/badge/🚀%20Flutter%20Drawer%20for%20Fast%20Navigation-darkblue)
+Swiftly navigate the app using the handy Flutter drawer.
+
+![Simple Admin System](https://img.shields.io/badge/🛡️%20Simple%20Admin%20System-darkred)
+Admins can view reported blogs, remove harmful content, and block users to ensure a safe community.
+
 ## 📸 Screenshots
 
 ### 🏠 Home Screen
